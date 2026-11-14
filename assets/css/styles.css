@@ -23,9 +23,17 @@
    .nav-cta         - Dark All Stories navigation button.
 
    Homepage:
-   .hero            - Introductory section.
-   .stories-section - All Stories section.
-   .about-section   - About section.
+   .hero             - Editorial hero section.
+   .hero-grid        - Two-column text and photo layout.
+   .hero-art         - Hero photo container.
+   .eyebrow          - Small uppercase section label.
+   .feature-section  - Featured Story section.
+   .featured-post    - Featured article preview card.
+   .featured-content - Featured article text layout.
+   .stories-section  - All Stories background and spacing.
+   .about-section    - About section background and spacing.
+   .about-grid       - Two-column About section layout.
+   .about-small      - Smaller supporting paragraph.
 
    Browse controls (M2):
    .filter-toolbar  - Search, filter and sort form layout.
@@ -430,7 +438,6 @@ p {
 
 .section-intro .eyebrow {
   margin-bottom: 10px;
-  color: #7e8793;
 }
 
 .section-intro h2 {
@@ -601,37 +608,82 @@ p {
   padding: 30px;
 }
 
-.stories-section,
-.about-section {
-  padding-block: 80px;
-}
+/* ========== 06. ALL STORIES SECTION ========== */
 
+/* Background and vertical spacing for the Stories section. */
 .stories-section {
+  padding-block: 80px;
   background-color: #f7f8fa;
 }
 
-.about-section {
-  border-top: 1px solid var(--line);
-  background-color: #fff;
+/* Shared heading properties for Stories and About. */
+.stories-section h2,
+.about-grid h2 {
+  margin-bottom: 16px;
+  line-height: 1.15;
 }
 
-.stories-section h2,
-.about-section h2 {
-  margin-bottom: 16px;
+/* All Stories heading: larger, bold typography. */
+.stories-section h2 {
   font-size: clamp(30px, 4vw, 48px);
   font-weight: 800;
-  line-height: 1.15;
   letter-spacing: -0.055em;
 }
 
-.stories-section p,
-.about-section p {
+/* Style only the Stories introduction, not article card text. */
+.stories-section > .shell > p {
   max-width: 650px;
   margin-bottom: 0;
   color: var(--ink-soft);
 }
 
-/* ========== 05. FOOTER ========== */
+/* ========== 07. ABOUT THE JOURNAL (M3 STEP 4.1) ========== */
+
+/* Background, border, and vertical spacing. */
+.about-section {
+  padding-block: 75px;
+  border-top: 1px solid var(--line);
+  background-color: #fff;
+}
+
+/* Two-column layout: heading on the left, description on the right. */
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 130px;
+}
+
+/* About heading: lighter weight than the Stories heading. */
+.about-grid h2 {
+  font-size: clamp(34px, 4vw, 50px);
+  font-weight: 600;
+  letter-spacing: -0.065em;
+}
+
+/* Highlight "curious." in gray without italic styling. */
+.about-grid h2 em {
+  color: #7d8c9f;
+  font-style: normal;
+}
+
+/* Main About paragraph, independent of the Stories introduction. */
+.about-grid > div:last-child > p {
+  max-width: none;
+  margin-bottom: 0;
+  color: #56616d;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+/* Secondary paragraph about DummyJSON write operations. */
+.about-grid > div:last-child > .about-small {
+  margin-top: 26px;
+  color: #8793a1;
+  font-size: 12px;
+}
+
+/* ========== 08. FOOTER ========== */
 
 .footer {
   padding-block: 30px;
@@ -668,7 +720,7 @@ p {
   font-size: 12px;
 }
 
-/* ========== 06. SEARCH, FILTER & SORT (M2) ========== */
+/* ========== 09. SEARCH, FILTER & SORT (M2) ========== */
 
 /* Search, tag filter, sorting and reset controls share one toolbar. */
 .filter-toolbar {
@@ -739,7 +791,7 @@ p {
   text-underline-offset: 3px;
 }
 
-/* ========== 07. RESULTS, ERRORS & EMPTY STATES (M2) ========== */
+/* ========== 10. RESULTS, ERRORS & EMPTY STATES (M2) ========== */
 
 /* JavaScript will update this text once API data becomes available. */
 .stories-section #result-count {
@@ -843,8 +895,8 @@ p {
   color: #586f8a;
 }
 
-/* Override the generic .stories-section paragraph rule. */
-.stories-section .card-excerpt {
+/* Card excerpts have independent typography from section introductions. */
+.card-excerpt {
   max-width: none;
   margin-bottom: 23px;
   color: #697480;
@@ -964,7 +1016,7 @@ p {
   color: var(--ink-soft);
 }
 
-/* ========== 08. POST DETAILS PAGE ========== */
+/* ========== 11. POST DETAILS PAGE ========== */
 
 /* Keep article content at a comfortable reading width. */
 .detail-shell {
@@ -1024,7 +1076,7 @@ p {
   line-height: 1.85;
 }
 
-/* ========== 09. REUSABLE BUTTONS ========== */
+/* ========== 12. REUSABLE BUTTONS ========== */
 
 .button {
   display: inline-flex;
@@ -1068,7 +1120,7 @@ p {
   background-color: #ffe2de;
 }
 
-/* ========== 10. COMMENTS SECTION ========== */
+/* ========== 13. COMMENTS SECTION ========== */
 
 .comments-section {
   margin-top: 60px;
@@ -1097,7 +1149,7 @@ p {
   font-size: 22px;
 }
 
-/* ========== 11. FORM FIELDS ========== */
+/* ========== 14. FORM FIELDS ========== */
 
 .form-field {
   margin-bottom: 20px;
@@ -1162,7 +1214,7 @@ p {
   font-size: 13px;
 }
 
-/* ========== 12. EDIT POST FORM ========== */
+/* ========== 15. EDIT POST FORM ========== */
 
 .editor-panel {
   padding: 28px;
@@ -1183,7 +1235,7 @@ p {
   gap: 12px;
 }
 
-/* ========== 13. RESPONSIVE LAYOUT ========== */
+/* ========== 16. RESPONSIVE LAYOUT ========== */
 
 /* Two filter columns on small laptops and tablets. */
 @media (max-width: 1020px) {
@@ -1211,6 +1263,11 @@ p {
 
   .posts-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Reduce the large desktop gap on smaller laptops. */
+  .about-grid {
+    gap: 60px;
   }
 }
 
@@ -1280,9 +1337,18 @@ p {
     padding: 28px;
   }
 
-  .stories-section,
-  .about-section {
+  .stories-section {
     padding-block: 60px;
+  }
+
+  /* Stack the About heading above the description on mobile. */
+  .about-section {
+    padding-block: 54px;
+  }
+
+  .about-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
   }
 
   .footer-inner {
@@ -1350,7 +1416,7 @@ p {
   }
 }
 
-/* ========== 14. REDUCED MOTION ========== */
+/* ========== 17. REDUCED MOTION ========== */
 
 /* Respect the user's reduced-motion setting. */
 @media (prefers-reduced-motion: reduce) {
