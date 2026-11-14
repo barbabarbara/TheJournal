@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Character encoding and responsive viewport -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Prevent search engines from indexing this demo -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Website information -->
+    <meta
+      name="description"
+      content="Read stories and discussions on The Journal."
+    />
+    <title>Article | The Journal</title>
+
+    <!-- Website favicon -->
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg" />
+
+    <!-- Google Fonts: Manrope for headings, DM Sans for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Shared stylesheet -->
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+
+  <body>
+    <!-- Accessibility: skip directly to main content -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <!-- ========== SITE HEADER ========== -->
+    <header class="site-header">
+      <div class="shell header-inner">
+        <!-- Website branding -->
+        <a class="brand" href="./index.html" aria-label="The Journal homepage">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <span>the journal<span class="brand-dot">.</span></span>
+        </a>
+
+        <!-- Main navigation -->
+        <nav class="site-nav" aria-label="Main navigation">
+          <a class="nav-link" href="./index.html">Home</a>
+
+          <a class="nav-link" href="./index.html#about">About</a>
+
+          <a class="nav-cta" href="./index.html#stories">
+            All Stories <span aria-hidden="true">↗</span>
+          </a>
+        </nav>
+        <!-- End main navigation -->
+      </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main id="main" tabindex="-1">
+      <div class="shell detail-shell">
+        <!-- Return to the homepage -->
+        <a class="back-link" href="./index.html#stories">
+          <span aria-hidden="true">←</span> Back to all stories
+        </a>
+
+        <!-- API errors will appear here -->
+        <p id="post-error" role="alert" hidden></p>
+
+        <!-- ========== ARTICLE ========== -->
+        <article
+          class="article-content"
+          id="post-article"
+          aria-labelledby="post-title"
+          aria-busy="false"
+        >
+          <!-- Article heading and loading status -->
+          <header class="article-header">
+            <h1 class="article-title" id="post-title">Article details</h1>
+
+            <p id="post-status" role="status">
+              Article content will appear here.
+            </p>
+          </header>
+
+          <!-- JavaScript will insert post content and metadata here -->
+          <div id="post-content"></div>
+
+          <!-- ========== ARTICLE ACTIONS ========== -->
+          <div class="article-actions">
+            <!-- Enabled when editing functionality is implemented -->
+            <button
+              class="button button-outline"
+              id="edit-post"
+              type="button"
+              disabled
+            >
+              Edit post
+            </button>
+
+            <!-- Enabled when deleting functionality is implemented -->
+            <button
+              class="button button-danger"
+              id="delete-post"
+              type="button"
+              disabled
+            >
+              Delete post
+            </button>
+          </div>
+        </article>
+
+        <!-- ========== EDIT POST FORM ========== -->
+        <!-- Hidden until the user selects Edit post -->
+        <section
+          class="editor-panel"
+          id="editor-panel"
+          aria-labelledby="editor-heading"
+          hidden
+        >
+          <h2 id="editor-heading">Edit post</h2>
+
+          <form id="edit-form">
+            <!-- Edit article title -->
+            <div class="form-field">
+              <label for="edit-title">Post title</label>
+              <input
+                type="text"
+                id="edit-title"
+                name="title"
+                maxlength="200"
+                required
+              />
+            </div>
+
+            <!-- Edit article content -->
+            <div class="form-field">
+              <label for="edit-body">Post content</label>
+              <textarea id="edit-body" name="body" rows="8" required></textarea>
+            </div>
+
+            <!-- Show validation and API errors -->
+            <p id="edit-error" role="alert" hidden></p>
+
+            <div class="form-actions">
+              <button
+                class="button button-dark"
+                type="submit"
+                id="save-post"
+                disabled
+              >
+                Save changes
+              </button>
+
+              <button
+                class="button button-outline"
+                type="button"
+                id="cancel-edit"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- ========== COMMENTS SECTION ========== -->
+        <section
+          class="comments-section"
+          id="comments"
+          aria-labelledby="comments-heading"
+        >
+          <h2 id="comments-heading">Comments</h2>
+
+          <!-- Announces comment loading status -->
+          <p id="comments-status" role="status">Comments will appear here.</p>
+
+          <!-- Comments will be fetched from DummyJSON -->
+          <div class="comments-list" id="comments-list" aria-busy="false"></div>
+
+          <!-- Display when no comments exist -->
+          <p id="no-comments" hidden>
+            No comments yet. Be the first to comment.
+          </p>
+
+          <!-- Comment loading or submission errors -->
+          <p id="comments-error" role="alert" hidden></p>
+
+          <!-- ========== ADD COMMENT FORM ========== -->
+          <div class="comment-compose">
+            <form id="comment-form">
+              <h3>Leave a comment</h3>
+
+              <div class="form-field">
+                <label for="comment-body">Your comment</label>
+
+                <textarea
+                  id="comment-body"
+                  name="body"
+                  rows="5"
+                  maxlength="1000"
+                  placeholder="Write your comment here..."
+                  required
+                ></textarea>
+              </div>
+
+              <!-- Submission feedback -->
+              <p id="comment-feedback" role="status"></p>
+
+              <button
+                class="button button-dark"
+                type="submit"
+                id="submit-comment"
+                disabled
+              >
+                Post comment
+              </button>
+            </form>
+          </div>
+        </section>
+
+        <!-- General success messages for article actions -->
+        <p id="action-status" role="status"></p>
+      </div>
+    </main>
+
+    <!-- ========== SITE FOOTER ========== -->
+    <footer class="footer">
+      <div class="shell footer-inner">
+        <!-- Footer branding -->
+        <a
+          class="brand footer-brand"
+          href="./index.html"
+          aria-label="The Journal homepage"
+        >
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <span>the journal<span class="brand-dot">.</span></span>
+        </a>
+
+        <p>Built with HTML, CSS, JavaScript &amp; DummyJSON.</p>
+      </div>
+    </footer>
+  </body>
+</html>

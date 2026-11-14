@@ -1,7 +1,58 @@
 /* ============================================================
-   THE JOURNAL — BASE STYLESHEET
-   Styles for the current semantic index.html only.
-   Additional components will be added in later milestones.
+   THE JOURNAL — MAIN STYLESHEET
+   Shared by index.html and post.html.
+   White, charcoal and cool-grey editorial theme.
+
+   CSS CLASS REFERENCE
+
+   Accessibility:
+   .skip-link       - Skip directly to the main content.
+
+   Reusable layout:
+   .shell           - Centers content and limits its width.
+   .header-inner    - Arranges the header with Flexbox.
+   .footer-inner    - Arranges the footer with Flexbox.
+
+   Header and navigation:
+   .site-header     - Header background and border.
+   .brand           - Website name and logo.
+   .brand-mark      - Decorative logo symbol.
+   .brand-dot       - Colored dot after the name.
+   .site-nav        - Navigation layout.
+   .nav-link        - Regular navigation links.
+   .nav-cta         - Dark All Stories navigation button.
+
+   Homepage:
+   .hero            - Introductory section.
+   .stories-section - All Stories section.
+   .button-link     - Temporary article navigation button.
+   .about-section   - About section.
+
+   Browse controls (M2):
+   .filter-toolbar  - Search, filter and sort form layout.
+   .filter-field    - One labeled form control.
+   .reset-filters   - Clear filters button.
+   .posts-grid      - Container for future post cards.
+   .notice-error    - API error message.
+   .empty-state     - No-results message.
+
+   Post details and forms (M2):
+   .detail-shell    - Narrow article reading column.
+   .back-link       - Return link to story list.
+   .article-title   - Large, responsive article heading.
+   .article-actions - Edit and delete button layout.
+   .button          - Reusable button foundation.
+   .button-dark     - Primary dark button.
+   .button-outline  - Outlined secondary button.
+   .button-danger   - Destructive-action button.
+   .comments-section - Comment list and composition area.
+   .comment-compose - Comment form panel.
+   .form-field      - Consistent labels, inputs, and textareas.
+   .editor-panel    - Hidden-until-edit form panel.
+
+   Footer:
+   .footer          - Dark footer.
+   .footer-brand    - Logo variant for dark backgrounds.
    ============================================================ */
 
 /* ========== 01. DESIGN TOKENS & BASE STYLES ========== */
@@ -33,6 +84,37 @@ html {
 
 body {
   margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Keep the footer at the bottom when a page has little content. */
+main {
+  flex: 1;
+}
+
+/* Form controls should use the same font as the rest of the website. */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+/* Respect dynamically hidden loading, error, and empty states. */
+[hidden] {
+  display: none !important;
 }
 
 a {
@@ -42,12 +124,14 @@ a {
 
 h1,
 h2,
+h3,
 p {
   margin-top: 0;
 }
 
 h1,
-h2 {
+h2,
+h3 {
   font-family: "Manrope", "DM Sans", Arial, sans-serif;
 }
 
@@ -147,66 +231,189 @@ p {
   background-color: #aab6c4;
 }
 
+/* --- Navigation links --- */
+
 .site-nav {
   display: flex;
+  flex-direction: row;
   align-items: center;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: 32px;
   font-size: 13px;
   font-weight: 600;
 }
 
-.site-nav a {
+/* Default navigation links */
+.site-nav .nav-link {
   display: inline-flex;
-  min-height: 44px;
   align-items: center;
+  min-height: 44px;
   color: var(--ink-soft);
+  transition: color 0.2s ease;
 }
 
-.site-nav a:hover,
-.site-nav a[aria-current="page"] {
+/* Highlight hovered and current navigation links */
+.site-nav .nav-link:hover,
+.site-nav .nav-link[aria-current="page"] {
   color: var(--ink);
 }
 
-/* ========== 04. HOMEPAGE SECTIONS ========== */
+/* All Stories — dark pill-shaped navigation link */
+.site-nav .nav-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 11px 20px;
 
+  background-color: #17191d;
+  color: #fff;
+  border-radius: 999px;
+
+  transition: background-color 0.2s ease;
+}
+
+/* Hover state */
+.site-nav .nav-cta:hover {
+  background-color: #383f49;
+  color: #fff;
+}
+
+/* ========== 04. HOMEPAGE HERO ========== */
+
+/* Split editorial layout: text on the left, magazine photo on the right. */
 .hero {
-  padding-block: clamp(80px, 12vw, 150px);
-  border-bottom: 1px solid var(--line);
+  /* Main container for the hero section, overflow hidden means that any content that extends beyond the boundaries of the container will be hidden. */
+  overflow: hidden;
+  min-height: 590px;
   background-color: #f6f7f9;
+  border-bottom: 1px solid #edf0f2;
+}
+
+/* Create a two-column layout for the hero section. */
+.hero-grid {
+  /* Enable CSS Grid layout. */
+  display: grid;
+  /* Divide available space into two columns:
+     0.92fr for text and 1.08fr for the image. */
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  /* Vertically center the content within the grid. */
+  align-items: center;
+  /* Add 55px of space between the columns. */
+  gap: 55px;
+  /* Ensure the hero grid is at least 590px tall. */
+  min-height: 590px;
+}
+
+.hero-copy {
+  position: relative;
+  z-index: 1;
+  padding-block: 65px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 17px;
+  color: #7e8793;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+}
+
+.eyebrow-line {
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background-color: #8f9ba8;
+}
+
+.hero-eyebrow {
+  margin-bottom: 32px;
+  color: #697583;
+  font-size: 10px;
 }
 
 .hero h1 {
-  max-width: 850px;
-  margin-bottom: 24px;
-  font-size: clamp(42px, 6vw, 82px);
+  max-width: 660px;
+  margin-bottom: 26px;
+  font-family: "Manrope", "DM Sans", Arial, sans-serif;
+  font-size: clamp(52px, 5.5vw, 82px);
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.065em;
+  line-height: 1.09;
+  letter-spacing: -0.078em;
+  overflow-wrap: anywhere;
 }
 
-.hero p {
-  max-width: 540px;
-  margin-bottom: 30px;
+.hero h1 em {
+  color: #788493;
+  font-style: normal;
+  font-weight: 500;
+}
+
+.hero-description {
+  max-width: 440px;
+  margin-bottom: 29px;
+  color: #5c6672;
   font-size: 16px;
-  color: var(--ink-soft);
+  line-height: 1.85;
 }
 
-.hero a {
-  display: inline-flex;
-  min-height: 46px;
+/* Uses the existing reusable .button and .button-dark classes. */
+.hero-button {
+  gap: 26px;
+  padding: 15px 24px;
+}
+
+.hero-bottom {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 12px 22px;
-  border-radius: 999px;
-  background-color: #1c2127;
-  color: #fff;
-  font-size: 13px;
+  gap: 16px;
+  margin-top: 55px;
+  color: #858f9b;
+  font-size: 10px;
   font-weight: 700;
+  letter-spacing: 0.13em;
 }
 
-.hero a:hover {
-  background-color: #383f49;
+.small-line {
+  width: 48px;
+  height: 1px;
+  background-color: #aab4bf;
+}
+
+.hero-art {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  height: 490px;
+  border-radius: 20px;
+  box-shadow: 0 25px 70px rgb(27 31 36 / 10%);
+}
+
+.hero-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.hero-photo-credit {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 91%);
+  color: #343b45;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  backdrop-filter: blur(12px);
 }
 
 .stories-section,
@@ -276,7 +483,428 @@ p {
   font-size: 12px;
 }
 
-/* ========== 06. RESPONSIVE LAYOUT ========== */
+/* --- Temporary article navigation link --- */
+
+.button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 46px;
+  padding: 12px 22px;
+  margin-top: 24px;
+
+  background-color: var(--ink);
+  color: #fff;
+  border-radius: 999px;
+
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.button-link:hover {
+  background-color: #383f49;
+}
+
+/* ========== 06. SEARCH, FILTER & SORT (M2) ========== */
+
+/* This form sits beneath the temporary article navigation link. */
+.filter-toolbar {
+  display: grid;
+  grid-template-columns:
+    minmax(220px, 1.7fr)
+    minmax(150px, 1fr)
+    minmax(150px, 1fr)
+    auto;
+  align-items: end;
+  gap: 15px;
+  margin-top: 36px;
+  padding: 20px;
+  background-color: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.filter-field {
+  min-width: 0;
+}
+
+/* A visible label is needed even when a placeholder is present. */
+.filter-field label {
+  display: block;
+  margin-bottom: 9px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.filter-field input,
+.filter-field select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 13px;
+  border: 1px solid #dce2e8;
+  border-radius: 9px;
+  background-color: #fff;
+  color: var(--ink);
+  font-size: 14px;
+}
+
+.filter-field input::placeholder {
+  color: #747b85;
+}
+
+/* Keep the global keyboard outline and provide an additional field cue. */
+.filter-field input:focus-visible,
+.filter-field select:focus-visible {
+  border-color: #677e98;
+}
+
+.reset-filters {
+  min-height: 44px;
+  padding: 10px 8px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.reset-filters:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ========== 07. RESULTS, ERRORS & EMPTY STATES (M2) ========== */
+
+/* JavaScript will update this text once API data becomes available. */
+.stories-section #result-count {
+  max-width: none;
+  margin: 28px 0 18px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* In M5 JavaScript will add <article> cards to this responsive grid. */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 21px;
+}
+
+.notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-block: 18px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.notice-error {
+  border: 1px solid #f6c9c3;
+  background-color: #fff0ee;
+  color: #953d34;
+}
+
+.notice-error p {
+  max-width: none;
+  margin: 0;
+  color: inherit;
+}
+
+/* Retry is an action, not a navigation link. */
+#retry-feed {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  border-radius: 8px;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+#retry-feed:hover {
+  background-color: #ffe2de;
+}
+
+.empty-state {
+  padding: 48px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background-color: #f7f8fa;
+  text-align: center;
+}
+
+.empty-state h3 {
+  margin: 0 0 10px;
+  font-size: 24px;
+}
+
+.empty-state p {
+  max-width: none;
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+/* ========== 08. POST DETAILS PAGE ========== */
+
+/* Keep article content at a comfortable reading width. */
+.detail-shell {
+  max-width: 900px;
+  padding-block: 48px 100px;
+}
+
+/* Navigation link back to all stories. */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 40px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.back-link:hover {
+  color: var(--ink);
+}
+
+/* Article title and introduction. */
+.article-content {
+  margin-bottom: 50px;
+}
+
+.article-title {
+  margin-bottom: 24px;
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.06em;
+}
+
+.article-header p {
+  color: var(--ink-soft);
+}
+
+/* Edit and delete buttons. */
+.article-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+/* Allow long API text to wrap within the reading column. */
+#post-content {
+  overflow-wrap: anywhere;
+}
+
+#post-content p {
+  max-width: 70ch;
+  margin-bottom: 22px;
+  font-size: 17px;
+  line-height: 1.85;
+}
+
+/* ========== 09. REUSABLE BUTTONS ========== */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.button-dark {
+  background-color: var(--ink);
+  color: #fff;
+}
+
+.button-outline {
+  border-color: var(--line);
+  background-color: #fff;
+  color: var(--ink);
+}
+
+.button-danger {
+  border-color: #f6c9c3;
+  background-color: #fff0ee;
+  color: var(--danger);
+}
+
+/* Hover effects apply only when the action is enabled. */
+.button-dark:hover:not(:disabled) {
+  background-color: #383f49;
+}
+
+.button-outline:hover:not(:disabled) {
+  background-color: #f7f8fa;
+}
+
+.button-danger:hover:not(:disabled) {
+  background-color: #ffe2de;
+}
+
+/* ========== 10. COMMENTS SECTION ========== */
+
+.comments-section {
+  margin-top: 60px;
+}
+
+.comments-section h2 {
+  margin-bottom: 20px;
+  font-size: clamp(28px, 4vw, 40px);
+}
+
+.comments-list {
+  margin-block: 24px;
+}
+
+/* Comment submission container. */
+.comment-compose {
+  padding: 24px;
+  margin-top: 32px;
+  background-color: #f7f8fa;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.comment-compose h3 {
+  margin-top: 0;
+  font-size: 22px;
+}
+
+/* ========== 11. FORM FIELDS ========== */
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-field label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Shared styles for edit and comment fields. */
+.form-field input,
+.form-field textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 14px;
+  border: 1px solid #dce2e8;
+  border-radius: 9px;
+  background-color: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+}
+
+/* Allow users to resize textareas vertically. */
+.form-field textarea {
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* Keep keyboard focus visible. */
+.form-field input:focus-visible,
+.form-field textarea:focus-visible {
+  border-color: #677e98;
+}
+
+/* Plain status and error containers will be updated later by JavaScript. */
+#post-status,
+#comments-status {
+  color: var(--ink-soft);
+}
+
+#post-error,
+#comments-error,
+#edit-error {
+  margin-block: 16px;
+  padding: 14px 16px;
+  border: 1px solid #f6c9c3;
+  border-radius: 9px;
+  background-color: #fff0ee;
+  color: #953d34;
+  font-size: 13px;
+}
+
+#comment-feedback:not(:empty),
+#action-status:not(:empty) {
+  margin-block: 14px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+/* ========== 12. EDIT POST FORM ========== */
+
+.editor-panel {
+  padding: 28px;
+  margin-block: 40px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background-color: #fff;
+}
+
+.editor-panel h2 {
+  margin-bottom: 24px;
+  font-size: 28px;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* ========== 13. RESPONSIVE LAYOUT ========== */
+
+/* Two filter columns on small laptops and tablets. */
+@media (max-width: 1020px) {
+  .hero-grid {
+    gap: 27px;
+  }
+
+  .hero-art {
+    height: 430px;
+  }
+
+  .filter-toolbar {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* At tablet widths the search fills row 1 and reset fills row 3. */
+  .filter-toolbar > .filter-field:first-child,
+  .filter-toolbar > .reset-filters {
+    grid-column: 1 / -1;
+  }
+
+  .filter-toolbar > .reset-filters {
+    justify-self: start;
+  }
+
+  .posts-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
 
 @media (max-width: 760px) {
   .shell {
@@ -295,7 +923,29 @@ p {
   }
 
   .hero {
-    padding-block: 75px;
+    min-height: 0;
+  }
+
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding-bottom: 30px;
+  }
+
+  .hero-copy {
+    padding-block: 65px 40px;
+  }
+
+  .hero h1 {
+    font-size: clamp(47px, 9vw, 68px);
+  }
+
+  .hero-bottom {
+    margin-top: 30px;
+  }
+
+  .hero-art {
+    height: 350px;
   }
 
   .stories-section,
@@ -310,6 +960,36 @@ p {
   }
 }
 
+@media (max-width: 600px) {
+  .filter-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px;
+  }
+
+  .posts-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .notice {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Preserve comfortable article and form spacing on narrow screens. */
+  .detail-shell {
+    padding-block: 30px 60px;
+  }
+
+  .article-title {
+    font-size: clamp(34px, 9vw, 48px);
+  }
+
+  .comment-compose,
+  .editor-panel {
+    padding: 18px;
+  }
+}
+
 @media (max-width: 530px) {
   .header-inner {
     flex-direction: column;
@@ -320,18 +1000,30 @@ p {
     font-size: 21px;
   }
 
-  .hero {
-    padding-block: 60px;
+  .hero-copy {
+    padding-top: 50px;
   }
 
   .hero h1 {
-    font-size: clamp(38px, 10vw, 54px);
+    font-size: clamp(43px, 11vw, 59px);
+  }
+
+  .hero-art {
+    height: 265px;
+    border-radius: 13px;
   }
 }
 
-/* Respect reduced-motion preferences. */
+/* ========== 14. REDUCED MOTION ========== */
+
+/* Respect the user's reduced-motion setting. */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .site-nav .nav-link,
+  .site-nav .nav-cta {
+    transition: none;
   }
 }
