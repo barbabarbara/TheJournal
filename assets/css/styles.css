@@ -1578,19 +1578,33 @@ p {
 }
 
 @media (max-width: 760px) {
+  /* Match the final reference's flexible mobile header. */
+  .site-header {
+    height: auto;
+    min-height: 70px;
+  }
+
   .shell {
     width: calc(100% - 36px);
   }
 
   .header-inner {
+    min-height: 70px;
     flex-wrap: wrap;
     justify-content: center;
-    padding-block: 16px;
+    padding-block: 12px;
   }
 
   .site-nav {
     justify-content: center;
-    gap: 12px 20px;
+    gap: 12px 18px;
+  }
+
+  /* Smaller navigation button matches the final mobile design. */
+  .site-nav .nav-cta {
+    gap: 12px;
+    padding: 9px 15px;
+    font-size: 11px;
   }
 
   .hero {
@@ -1689,18 +1703,15 @@ p {
     justify-content: center;
     text-align: center;
   }
+
+  /* Give the footer description its own row on mobile. */
+  .footer-inner p {
+    order: 3;
+    width: 100%;
+  }
 }
 
 @media (max-width: 600px) {
-  .filter-toolbar {
-    grid-template-columns: minmax(0, 1fr);
-    padding: 16px;
-  }
-
-  .posts-grid {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
   .notice {
     flex-direction: column;
     align-items: flex-start;
@@ -1735,6 +1746,12 @@ p {
     font-size: 21px;
   }
 
+  /* Let the links use the whole available width. */
+  .site-nav {
+    width: 100%;
+    gap: 12px 18px;
+  }
+
   .hero-copy {
     padding-top: 50px;
   }
@@ -1746,6 +1763,34 @@ p {
   .hero-art {
     height: 265px;
     border-radius: 13px;
+  }
+
+  /* Keep the photo caption compact on small screens. */
+  .hero-photo-credit {
+    left: 12px;
+    bottom: 12px;
+    font-size: 8px;
+  }
+
+  .section-intro h2 {
+    font-size: 32px;
+  }
+
+  /* As in the reference, the toolbar and cards stack at 530px. */
+  .filter-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 13px;
+    padding: 15px;
+  }
+
+  .posts-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .results-line {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .article-title {
@@ -1785,6 +1830,21 @@ p {
 
   .compose-bottom .button {
     width: 100%;
+  }
+}
+
+/* Extra-compact navigation, matching the final reference at 320px. */
+@media (max-width: 320px) {
+  .brand {
+    font-size: 19px;
+  }
+
+  .site-nav {
+    gap: 8px 12px;
+  }
+
+  .site-nav .nav-cta {
+    padding-inline: 12px;
   }
 }
 
