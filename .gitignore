@@ -1,0 +1,17 @@
+# Local tooling and operating-system files
+node_modules/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log
+
+# Project planning documentation
+PROJECT_PLAN.md
+
+
+# Tests
+/tests/
+
+# Fallow configuration
+.fallow/

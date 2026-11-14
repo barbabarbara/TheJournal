@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Character encoding and responsive viewport -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Prevent search engines from indexing this demo -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Website information -->
+    <meta
+      name="description"
+      content="The Journal — a modern blog for stories, ideas, and perspectives."
+    />
+    <title>The Journal | Stories & Perspectives</title>
+
+    <!-- Website favicon -->
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/favicon.svg" />
+
+    <!-- Google Fonts: Manrope for headings, DM Sans for body text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Main stylesheet -->
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+
+  <body>
+    <!-- Accessibility: skip directly to the main content -->
+    <a class="skip-link" href="#main">Skip to main content</a>
+
+    <!-- Site header -->
+    <header class="site-header">
+      <div class="shell header-inner">
+        <!-- Website branding -->
+        <a class="brand" href="./index.html" aria-label="The Journal homepage">
+          <!-- Decorative logo mark -->
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <span>the journal<span class="brand-dot">.</span></span>
+        </a>
+
+        <!-- Main navigation -->
+        <nav class="site-nav" aria-label="Main navigation">
+          <a href="./index.html" aria-current="page">Home</a>
+          <a href="#about">About</a>
+          <a href="#stories">All Stories</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main page content -->
+    <main id="main">
+      <!-- Introduction -->
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="shell">
+          <h1 id="hero-heading">Stories worth your time.</h1>
+          <p>
+            Thoughtful stories, fresh ideas, and new perspectives. Discover
+            something worth reading every day.
+          </p>
+          <a href="#stories">Explore stories</a>
+        </div>
+      </section>
+
+      <!-- Blog posts will be added in later milestones -->
+      <section
+        class="stories-section"
+        id="stories"
+        aria-labelledby="stories-heading"
+      >
+        <div class="shell">
+          <h2 id="stories-heading">All Stories</h2>
+          <p>Explore our latest stories and perspectives.</p>
+        </div>
+      </section>
+
+      <!-- About the website -->
+      <section class="about-section" id="about" aria-labelledby="about-heading">
+        <div class="shell">
+          <h2 id="about-heading">About The Journal</h2>
+          <p>
+            The Journal is a digital blog platform built with HTML, CSS,
+            JavaScript, and the DummyJSON REST API.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Website footer -->
+    <footer class="footer">
+      <div class="shell footer-inner">
+        <a
+          class="brand footer-brand"
+          href="./index.html"
+          aria-label="The Journal homepage"
+        >
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+
+          <span>the journal<span class="brand-dot">.</span></span>
+        </a>
+
+        <p>Built with HTML, CSS, JavaScript &amp; DummyJSON.</p>
+      </div>
+    </footer>
+  </body>
+</html>

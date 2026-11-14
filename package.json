@@ -1,0 +1,10 @@
+{
+  "name": "the-journal-blog",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Responsive JavaScript blog with DummyJSON REST API",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  }
+}

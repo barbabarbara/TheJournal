@@ -1,0 +1,337 @@
+/* ============================================================
+   THE JOURNAL — BASE STYLESHEET
+   Styles for the current semantic index.html only.
+   Additional components will be added in later milestones.
+   ============================================================ */
+
+/* ========== 01. DESIGN TOKENS & BASE STYLES ========== */
+
+:root {
+  --danger: #b63b3b;
+  --ink: #16191d;
+  --ink-soft: #545b65;
+  --muted: #747b85;
+  --line: #e8ebef;
+  --container: 1200px;
+
+  font-family: "DM Sans", Arial, sans-serif;
+  color: var(--ink);
+  background-color: #fff;
+  font-synthesis: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2 {
+  font-family: "Manrope", "DM Sans", Arial, sans-serif;
+}
+
+p {
+  line-height: 1.7;
+}
+
+.shell {
+  width: min(var(--container), calc(100% - 64px));
+  margin-inline: auto;
+}
+
+/* ========== 02. ACCESSIBILITY ========== */
+
+:focus-visible {
+  outline: 3px solid #677e98;
+  outline-offset: 4px;
+}
+
+/* The skip link becomes visible when reached with the keyboard. */
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 15px;
+  z-index: 1000;
+  padding: 12px 20px;
+  background-color: #fff;
+  color: var(--ink);
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* ========== 03. HEADER & NAVIGATION ========== */
+
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background-color: #fff;
+}
+
+.header-inner {
+  display: flex;
+  min-height: 76px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: "Manrope", "DM Sans", Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: -0.075em;
+  white-space: nowrap;
+}
+
+.brand-dot {
+  color: #87909b;
+}
+
+/* The three spans draw the decorative lines inside the logo. */
+.brand-mark {
+  position: relative;
+  display: inline-block;
+  flex-shrink: 0;
+  width: 30px;
+  height: 33px;
+  border-radius: 8px;
+  background-color: #22272d;
+  transform: rotate(-8deg);
+}
+
+.brand-mark span {
+  position: absolute;
+  left: 9px;
+  width: 14px;
+  height: 3px;
+  border-radius: 3px;
+  background-color: #f5f8ed;
+}
+
+.brand-mark span:first-child {
+  top: 10px;
+}
+
+.brand-mark span:nth-child(2) {
+  top: 16px;
+}
+
+.brand-mark span:last-child {
+  top: 22px;
+  width: 10px;
+  background-color: #aab6c4;
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.site-nav a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  color: var(--ink-soft);
+}
+
+.site-nav a:hover,
+.site-nav a[aria-current="page"] {
+  color: var(--ink);
+}
+
+/* ========== 04. HOMEPAGE SECTIONS ========== */
+
+.hero {
+  padding-block: clamp(80px, 12vw, 150px);
+  border-bottom: 1px solid var(--line);
+  background-color: #f6f7f9;
+}
+
+.hero h1 {
+  max-width: 850px;
+  margin-bottom: 24px;
+  font-size: clamp(42px, 6vw, 82px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.065em;
+}
+
+.hero p {
+  max-width: 540px;
+  margin-bottom: 30px;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+.hero a {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  border-radius: 999px;
+  background-color: #1c2127;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hero a:hover {
+  background-color: #383f49;
+}
+
+.stories-section,
+.about-section {
+  padding-block: 80px;
+}
+
+.stories-section {
+  background-color: #fff;
+}
+
+.about-section {
+  border-top: 1px solid var(--line);
+  background-color: #f7f8fa;
+}
+
+.stories-section h2,
+.about-section h2 {
+  margin-bottom: 16px;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.055em;
+}
+
+.stories-section p,
+.about-section p {
+  max-width: 650px;
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+
+/* ========== 05. FOOTER ========== */
+
+.footer {
+  padding-block: 30px;
+  background-color: #171a1e;
+  color: #e2e5e8;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.footer-brand {
+  color: #fff;
+}
+
+.footer-brand .brand-mark {
+  background-color: #fff;
+}
+
+.footer-brand .brand-mark span {
+  background-color: #22272d;
+}
+
+.footer-brand .brand-mark span:last-child {
+  background-color: #87909b;
+}
+
+.footer-inner p {
+  margin: 0;
+  color: #a6afb8;
+  font-size: 12px;
+}
+
+/* ========== 06. RESPONSIVE LAYOUT ========== */
+
+@media (max-width: 760px) {
+  .shell {
+    width: calc(100% - 36px);
+  }
+
+  .header-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-block: 16px;
+  }
+
+  .site-nav {
+    justify-content: center;
+    gap: 12px 20px;
+  }
+
+  .hero {
+    padding-block: 75px;
+  }
+
+  .stories-section,
+  .about-section {
+    padding-block: 60px;
+  }
+
+  .footer-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+}
+
+@media (max-width: 530px) {
+  .header-inner {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .brand {
+    font-size: 21px;
+  }
+
+  .hero {
+    padding-block: 60px;
+  }
+
+  .hero h1 {
+    font-size: clamp(38px, 10vw, 54px);
+  }
+}
+
+/* Respect reduced-motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
