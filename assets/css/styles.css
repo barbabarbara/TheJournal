@@ -284,25 +284,17 @@ p {
 
 /* Split editorial layout: text on the left, magazine photo on the right. */
 .hero {
-  /* Main container for the hero section, overflow hidden means that any content that extends beyond the boundaries of the container will be hidden. */
   overflow: hidden;
   min-height: 590px;
   background-color: #f6f7f9;
   border-bottom: 1px solid #edf0f2;
 }
 
-/* Create a two-column layout for the hero section. */
 .hero-grid {
-  /* Enable CSS Grid layout. */
   display: grid;
-  /* Divide available space into two columns:
-     0.92fr for text and 1.08fr for the image. */
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
-  /* Vertically center the content within the grid. */
   align-items: center;
-  /* Add 55px of space between the columns. */
   gap: 55px;
-  /* Ensure the hero grid is at least 590px tall. */
   min-height: 590px;
 }
 
@@ -414,6 +406,195 @@ p {
   font-weight: 700;
   letter-spacing: 0.08em;
   backdrop-filter: blur(12px);
+}
+
+/* ========== 05. FEATURED STORY (M3) ========== */
+
+/* Center the feature section using the shared .shell container. */
+.feature-section {
+  padding-block: 88px 95px;
+}
+
+/* Place the section heading and supporting text at opposite edges. */
+.section-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.section-intro .eyebrow {
+  margin-bottom: 10px;
+  color: #7e8793;
+}
+
+.section-intro h2 {
+  margin: 0;
+  font-size: clamp(34px, 3.5vw, 48px);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.065em;
+}
+
+.heading-period {
+  color: #8c98a6;
+}
+
+.section-intro > p {
+  margin: 0 0 6px;
+  color: #78818b;
+  font-size: 13px;
+}
+
+/* The card has an illustrated column and a text column. */
+.featured-post {
+  display: grid;
+  grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+  min-height: 330px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background-color: #fff;
+}
+
+/* Large decorative artwork; no image file is required. */
+.featured-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 350px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #dce3ea, #c7d0db 55%, #b8c4d0);
+}
+
+/* Draw the upper-right decorative circle. */
+.featured-visual::before {
+  content: "";
+  position: absolute;
+  top: -125px;
+  right: -65px;
+  width: 360px;
+  height: 360px;
+  border: 2px solid #aab9c8;
+  border-radius: 50%;
+}
+
+/* Draw the lower-left decorative shape. */
+.featured-visual::after {
+  content: "";
+  position: absolute;
+  top: 155px;
+  left: -100px;
+  width: 310px;
+  height: 310px;
+  transform: rotate(38deg);
+  border-radius: 120px;
+  background-color: #bdc9d5;
+}
+
+.featured-letter {
+  position: relative;
+  z-index: 2;
+  transform: rotate(-12deg);
+  color: #f8fafc;
+  font:
+    800 225px/1 "Manrope",
+    "DM Sans",
+    sans-serif;
+  letter-spacing: -0.13em;
+  text-shadow: 13px 13px 0 #aabacb;
+}
+
+.featured-art-text {
+  position: absolute;
+  bottom: 25px;
+  left: 28px;
+  z-index: 3;
+  color: #4d5b6b;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.19em;
+}
+
+/* Flexbox pushes article metadata towards the bottom of the card. */
+.featured-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 38px 44px 27px;
+}
+
+.featured-kicker {
+  margin-bottom: 21px;
+  color: #657587;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tag {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background-color: #f0f3f6;
+  color: #5f6d7a;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+}
+
+.featured-title {
+  margin: 18px 0 12px;
+  font-size: clamp(28px, 2.7vw, 40px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.055em;
+}
+
+.featured-description {
+  margin-bottom: 22px;
+  color: #5a6470;
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+/* The link and metadata styles are ready for the future API-rendered card. */
+.featured-link {
+  display: inline-flex;
+  gap: 13px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #272522;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.featured-link:hover {
+  color: #586f8a;
+}
+
+.featured-meta {
+  margin-top: auto;
+  padding-top: 18px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+/* When JavaScript loads the feature, it can remove this class. */
+.featured-loading {
+  display: block;
+}
+
+.featured-placeholder {
+  padding: 30px;
 }
 
 .stories-section,
@@ -948,6 +1129,30 @@ p {
     height: 350px;
   }
 
+  /* Stack the featured card under its artwork on narrow screens. */
+  .feature-section {
+    padding-block: 65px;
+  }
+
+  .section-intro {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .featured-post {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .featured-visual {
+    min-height: 225px;
+    max-height: 225px;
+  }
+
+  .featured-content {
+    padding: 28px;
+  }
+
   .stories-section,
   .about-section {
     padding-block: 60px;
@@ -987,6 +1192,10 @@ p {
   .comment-compose,
   .editor-panel {
     padding: 18px;
+  }
+
+  .featured-content {
+    padding: 24px;
   }
 }
 
