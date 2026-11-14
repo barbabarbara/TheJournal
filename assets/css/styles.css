@@ -25,14 +25,18 @@
    Homepage:
    .hero            - Introductory section.
    .stories-section - All Stories section.
-   .button-link     - Temporary article navigation button.
    .about-section   - About section.
 
    Browse controls (M2):
    .filter-toolbar  - Search, filter and sort form layout.
    .filter-field    - One labeled form control.
    .reset-filters   - Clear filters button.
-   .posts-grid      - Container for future post cards.
+   .posts-grid      - Responsive list of article preview cards.
+   .post-card       - Individual story preview (flex column).
+   .card-top        - Story number and decorative arrow.
+   .card-main       - Tags, title, and excerpt.
+   .card-meta       - Views/likes metadata.
+   .card-actions    - Read, edit, and delete controls.
    .notice-error    - API error message.
    .empty-state     - No-results message.
 
@@ -603,12 +607,12 @@ p {
 }
 
 .stories-section {
-  background-color: #fff;
+  background-color: #f7f8fa;
 }
 
 .about-section {
   border-top: 1px solid var(--line);
-  background-color: #f7f8fa;
+  background-color: #fff;
 }
 
 .stories-section h2,
@@ -664,33 +668,9 @@ p {
   font-size: 12px;
 }
 
-/* --- Temporary article navigation link --- */
-
-.button-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-height: 46px;
-  padding: 12px 22px;
-  margin-top: 24px;
-
-  background-color: var(--ink);
-  color: #fff;
-  border-radius: 999px;
-
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.button-link:hover {
-  background-color: #383f49;
-}
-
 /* ========== 06. SEARCH, FILTER & SORT (M2) ========== */
 
-/* This form sits beneath the temporary article navigation link. */
+/* Search, tag filter, sorting and reset controls share one toolbar. */
 .filter-toolbar {
   display: grid;
   grid-template-columns:
@@ -764,17 +744,164 @@ p {
 /* JavaScript will update this text once API data becomes available. */
 .stories-section #result-count {
   max-width: none;
-  margin: 28px 0 18px;
+  margin: 0;
   color: var(--ink-soft);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
 }
 
-/* In M5 JavaScript will add <article> cards to this responsive grid. */
+/* Title/count and preview status share one row. */
+.results-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin: 29px 0 18px;
+}
+
+/* M5 can replace the preview indicator with a live API badge. */
+.design-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #7e8793;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.design-indicator > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #819eb1;
+}
+
+/* The final reference uses three equal card columns on desktop. */
 .posts-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 21px;
+}
+
+/* One card uses Flexbox to keep metadata and actions at the bottom. */
+.post-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 370px;
+  padding: 28px;
+  border: 1px solid #e6ebf0;
+  border-radius: 14px;
+  background-color: #fff;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 35px rgb(29 47 62 / 7%);
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 35px;
+}
+
+.card-number {
+  color: #8793a1;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.card-arrow {
+  color: #8793a1;
+  font-size: 18px;
+}
+
+/* flex: 1 gives the article body the remaining vertical space. */
+.card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.card-title {
+  margin: 17px 0 12px;
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.3;
+  letter-spacing: -0.055em;
+}
+
+.card-title-link:hover .card-title {
+  color: #586f8a;
+}
+
+/* Override the generic .stories-section paragraph rule. */
+.stories-section .card-excerpt {
+  max-width: none;
+  margin-bottom: 23px;
+  color: #697480;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: auto;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #ebeff3;
+  color: #8793a1;
+  font-size: 11px;
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  padding-top: 15px;
+}
+
+.card-read,
+.card-secondary {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.card-read {
+  margin-right: auto;
+}
+
+.card-read:hover,
+.card-secondary:not(:disabled):hover {
+  color: #586f8a;
+}
+
+.card-secondary {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #64758a;
+}
+
+.card-delete {
+  color: #b77974;
+}
+
+/* Preview-only controls are disabled until JavaScript is implemented. */
+.card-actions button:disabled {
+  opacity: 0.55;
 }
 
 .notice {
@@ -1232,7 +1359,12 @@ p {
   }
 
   .site-nav .nav-link,
-  .site-nav .nav-cta {
+  .site-nav .nav-cta,
+  .post-card {
     transition: none;
+  }
+
+  .post-card:hover {
+    transform: none;
   }
 }

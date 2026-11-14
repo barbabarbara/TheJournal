@@ -160,11 +160,6 @@
           <h2 id="stories-heading">All Stories</h2>
           <p>Explore our latest stories and perspectives.</p>
 
-          <!-- Temporary link for testing page navigation -->
-          <a class="button-link" href="./post.html?id=12">
-            Read an article <span aria-hidden="true">→</span>
-          </a>
-
           <!-- ========== SEARCH, FILTER & SORT ========== -->
 
           <!-- Search and browse controls -->
@@ -215,10 +210,15 @@
 
           <!-- ========== POST LIST ========== -->
 
-          <!-- Announces post counts and loading status -->
-          <p id="result-count" role="status">
-            Posts will appear here after API integration.
-          </p>
+          <!-- Live API counts replace this design-preview message in M5. -->
+          <div class="results-line">
+            <p id="result-count" role="status">
+              Three sample cards — design preview only.
+            </p>
+            <span class="design-indicator">
+              <span aria-hidden="true"></span> DESIGN PREVIEW
+            </span>
+          </div>
 
           <!-- API errors will be displayed here -->
           <div class="notice notice-error" id="feed-error" role="alert" hidden>
@@ -229,8 +229,155 @@
             <button type="button" id="retry-feed">Try again</button>
           </div>
 
-          <!-- JavaScript will insert article cards here -->
-          <div class="posts-grid" id="posts-grid" aria-busy="false"></div>
+          <!--
+            M3 design previews. These are NOT real DummyJSON stories.
+            M5 will replace their contents with JavaScript-rendered cards.
+            All preview links lead to the placeholder article page.
+          -->
+          <div class="posts-grid" id="posts-grid" aria-busy="false">
+            <!-- Sample 1: static preview; JavaScript will replace it in M5. -->
+            <article class="post-card">
+              <div class="card-top">
+                <span class="card-number">PREVIEW / 001</span>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </div>
+
+              <div class="card-main">
+                <div class="tag-list">
+                  <span class="tag">Ideas</span>
+                  <span class="tag">Perspective</span>
+                </div>
+
+                <a class="card-title-link" href="./post.html?id=12">
+                  <h3 class="card-title">
+                    The art of noticing everyday details
+                  </h3>
+                </a>
+
+                <p class="card-excerpt">
+                  Good stories begin with curiosity. This example card
+                  demonstrates how a headline and short excerpt will appear in
+                  the finished article feed.
+                </p>
+              </div>
+
+              <div class="card-meta">
+                <span>◉ Views pending</span>
+                <span>♥ Likes pending</span>
+              </div>
+
+              <div class="card-actions">
+                <a class="card-read" href="./post.html?id=12">
+                  View article layout ↗
+                </a>
+                <button class="card-secondary" type="button" disabled>
+                  Edit
+                </button>
+                <button
+                  class="card-secondary card-delete"
+                  type="button"
+                  disabled
+                >
+                  Delete
+                </button>
+              </div>
+            </article>
+
+            <!-- Sample 2: static preview; JavaScript will replace it in M5. -->
+            <article class="post-card">
+              <div class="card-top">
+                <span class="card-number">PREVIEW / 002</span>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </div>
+
+              <div class="card-main">
+                <div class="tag-list">
+                  <span class="tag">Culture</span>
+                  <span class="tag">Inspiration</span>
+                </div>
+
+                <a class="card-title-link" href="./post.html?id=12">
+                  <h3 class="card-title">
+                    A fresh way to look at familiar things
+                  </h3>
+                </a>
+
+                <p class="card-excerpt">
+                  The Journal gives each story space to breathe. This sample
+                  shows a longer heading, supporting text, and a clear path to
+                  the article page.
+                </p>
+              </div>
+
+              <div class="card-meta">
+                <span>◉ Views pending</span>
+                <span>♥ Likes pending</span>
+              </div>
+
+              <div class="card-actions">
+                <a class="card-read" href="./post.html?id=12">
+                  View article layout ↗
+                </a>
+                <button class="card-secondary" type="button" disabled>
+                  Edit
+                </button>
+                <button
+                  class="card-secondary card-delete"
+                  type="button"
+                  disabled
+                >
+                  Delete
+                </button>
+              </div>
+            </article>
+
+            <!-- Sample 3: static preview; JavaScript will replace it in M5. -->
+            <article class="post-card">
+              <div class="card-top">
+                <span class="card-number">PREVIEW / 003</span>
+                <span class="card-arrow" aria-hidden="true">↗</span>
+              </div>
+
+              <div class="card-main">
+                <div class="tag-list">
+                  <span class="tag">Stories</span>
+                  <span class="tag">Reflections</span>
+                </div>
+
+                <a class="card-title-link" href="./post.html?id=12">
+                  <h3 class="card-title">
+                    Why thoughtful stories stay with us
+                  </h3>
+                </a>
+
+                <p class="card-excerpt">
+                  From the smallest observation to a larger conversation, every
+                  card follows the same clean, responsive editorial design.
+                </p>
+              </div>
+
+              <div class="card-meta">
+                <span>◉ Views pending</span>
+                <span>♥ Likes pending</span>
+              </div>
+
+              <div class="card-actions">
+                <a class="card-read" href="./post.html?id=12">
+                  View article layout ↗
+                </a>
+                <button class="card-secondary" type="button" disabled>
+                  Edit
+                </button>
+                <button
+                  class="card-secondary card-delete"
+                  type="button"
+                  disabled
+                >
+                  Delete
+                </button>
+              </div>
+            </article>
+          </div>
 
           <!-- Displayed when search or filters return no results -->
           <div class="empty-state" id="empty-state" hidden>
