@@ -1,139 +1,113 @@
 # The Journal — Stories & Perspectives
 
-An editorial blog with a clean, modern white-and-cool-grey design, built with **semantic HTML, one CSS stylesheet, and vanilla JavaScript**. It uses [DummyJSON](https://dummyjson.com/) for real sample posts and comments.
+A modern, responsive blog platform built with **HTML5, CSS3, and vanilla JavaScript**.
 
-**The Journal does not invent or substitute blog articles.** Post titles, article bodies, and tags come directly from the API. The editorial hero text and background photograph are static website branding, not API posts.
+The Journal is a JavaScript coursework project focused on **semantic HTML**, **accessibility**, **responsive design**, and **REST API integration**. It will use the [DummyJSON REST API](https://dummyjson.com/) to display sample posts and comments.
+
+## Technologies
+
+- **HTML5** — Semantic page structure
+- **CSS3** — Styling and responsive layouts
+- **JavaScript** — Interactivity and API requests using `fetch()`
+- **DummyJSON** — Sample blog posts and comments
+- **Git and GitHub** — Version control and deployment
 
 ## Features
 
-| Assignment | Implementation |
-|---|---|
-| GET: at least 10 posts | Requests all available posts; renders 12 at a time with **Load more** |
-| Dedicated page | `post.html?id=123` displays the selected post |
-| GET comments | Requests `/comments/post/:id?limit=0` |
-| POST comment | Shows a comment only after a successful API response |
-| PUT / PATCH | Edit title and body (and optional tags) using a selectable method |
-| DELETE | Delete with confirmation and visible status |
-| Error handling | Shared `fetch()` helper checks `response.ok` and uses `try/catch`; errors appear on the page |
-| VG: search | Searches titles, text, and tags |
-| VG: tags | Populates tag options from fetched data |
-| VG: sort | Sorts by views, likes, title, or descending post ID (not publication date) |
-| Responsive | Layout rules for phones, tablets, and desktops |
+### Completed — Initial setup
 
-### Important: DummyJSON is a simulated API
+- [x] Project folder structure
+- [x] Basic semantic HTML structure
+- [x] Responsive CSS foundation
+- [x] Google Fonts (DM Sans and Manrope)
+- [x] Website favicon linked in HTML
+- [x] Header, navigation, and footer
+- [x] Homepage sections
+- [x] Basic keyboard accessibility styles and skip link
 
-**POST, PUT, PATCH, and DELETE do not permanently change DummyJSON's database.** After successful API operations, this project stores edits, deleted post IDs, and new comments in **your browser's `localStorage`**. They persist across refreshes in the same browser, but they are **not shared between different visitors**. Select **Reset demo data** to clear them.
+### Planned — Blog functionality
 
-## Folder structure
+- [ ] Display at least 10 posts (GET)
+- [ ] Provide a dedicated detail page for each post (`post.html?id=123`)
+- [ ] Fetch and display comments for each post (GET)
+- [ ] Add comments after successful API requests (POST)
+- [ ] Edit post titles and bodies (PUT/PATCH)
+- [ ] Delete posts with confirmation (DELETE)
+- [ ] Search posts (VG)
+- [ ] Filter posts by tags (VG)
+- [ ] Sort posts by views or reactions (VG)
+- [ ] Handle loading, empty, success, and error states in the UI
+- [ ] Test responsiveness, accessibility, and functionality
+- [ ] Deploy to GitHub Pages
+
+## API
+
+Documentation:
+
+- [DummyJSON Posts](https://dummyjson.com/docs/posts)
+- [DummyJSON Comments](https://dummyjson.com/docs/comments)
+
+**Important:** DummyJSON simulates POST, PUT, PATCH, and DELETE operations; they do **not** permanently change its database. The planned implementation will save successful simulated changes in the browser's `localStorage`. These changes will persist in that browser but will not be shared between visitors.
+
+## Folder Structure
 
 ```text
-TheJournalBlog/
-├── index.html                    # Homepage and article overview
-├── post.html                     # Dedicated post and comment page
-├── TASK.md                       # Assignment brief
-├── README.md
-├── .gitignore
-├── package.json                 # Test command only, no runtime dependencies
+TheJournal/
+├── index.html                  # Homepage and article overview
+├── post.html                   # Individual post details (planned)
+├── TASK.md                     # Assignment requirements
+├── README.md                   # Project documentation
+├── .gitignore                  # Git exclusions
+├── package.json                # Test configuration (planned)
+│
 ├── assets/
 │   ├── css/
-│   │   └── styles.css           # All website styles, one file
+│   │   └── styles.css          # Main stylesheet
 │   ├── icons/
-│   │   └── favicon.svg          # Scalable browser-tab icon
+│   │   └── favicon.svg         # Website favicon
 │   ├── images/
 │   │   └── editorial-magazine.webp
 │   └── js/
-│       ├── api.js               # All GET/POST/PUT/PATCH/DELETE requests
-│       ├── app.js               # Homepage DOM rendering and filters
-│       ├── post.js              # Post detail, editor, comments, delete
-│       ├── common.js            # Shared components, alerts, toast messages
-│       ├── storage.js           # Browser persistence for simulated writes
-│       └── utils.js             # Pure, testable filtering/sorting utilities
-└── tests/
+│       ├── api.js              # REST API requests (planned)
+│       ├── app.js              # Homepage functionality (planned)
+│       ├── post.js             # Post details and comments (planned)
+│       ├── common.js           # Shared UI functions (planned)
+│       ├── storage.js          # Browser persistence (planned)
+│       └── utils.js            # Search, filtering, sorting (planned)
+│
+└── tests/                      # Local tests; currently gitignored
     ├── api.test.mjs
     ├── utils.test.mjs
     └── structure.test.mjs
 ```
 
-## Navigation and design
+The directory structure has been created; some files are placeholders whose functionality will be added in later milestones. The `tests/` directory is currently excluded from Git tracking.
 
-Both pages use consistent **Home, Stories, About** navigation. The **Stories** link keeps the reference design’s dark rounded call-to-action style. All three links remain accessible on narrow screens.
+## Run Locally
 
-The default sort uses **descending post ID**, not a publication timestamp (DummyJSON post objects do not supply reliable publication dates).
-
-## Run locally
-
-Open the folder in **Visual Studio Code**, then right-click `index.html` and choose **Open with Live Server**. Alternatively, start a local server:
+Clone the repository using SSH:
 
 ```bash
-python -m http.server 5500
+git clone git@github.com:barbabarbara/TheJournal.git
+cd TheJournal
 ```
 
-Visit `http://localhost:5500/`. Opening the HTML file directly from `file://` is not recommended because JavaScript modules require an HTTP server in most browsers.
+Open the folder in **VS Code**, then serve `index.html` using **Live Server** (or another local development server). A local server will also support JavaScript modules introduced in later milestones.
 
-An internet connection is needed to retrieve posts and comments from DummyJSON and to load Google Fonts.
+## Project Status
 
-## CSS structure
+**M1 — Initial Project Setup**
 
-There is **one CSS file** shared by both pages. Its sections are organized by responsibility:
+The basic folder structure, HTML foundation, and CSS foundation are prepared. Git initialization and the first push to GitHub are the remaining M1 steps, if not yet completed.
 
-1. Design tokens, reset, and typography
-2. Header and navigation
-3. Buttons and homepage hero
-4. Featured story
-5. Search, filters, and article cards
-6. About and footer
-7. Article details
-8. Editor and comments
-9. Feedback and notifications
-10–13. Responsive breakpoints and reduced-motion support
+Development will continue milestone by milestone, with each feature implemented and tested separately.
 
-The HTML contains semantic sections and the IDs consumed by the JavaScript. Avoid renaming IDs such as `posts-grid`, `featured-post`, `post-article`, `edit-form`, and `comments-list` without updating the corresponding JavaScript.
+## Repository
 
-## REST API endpoints
+[GitHub — barbabarbara/TheJournal](https://github.com/barbabarbara/TheJournal)
 
-| HTTP method | Endpoint | Use |
-|---|---|---|
-| GET | `https://dummyjson.com/posts?limit=0` | List posts |
-| GET | `https://dummyjson.com/posts/:id` | One post |
-| GET | `https://dummyjson.com/comments/post/:id?limit=0` | Comments for a post |
-| POST | `https://dummyjson.com/comments/add` | Submit a comment |
-| PUT | `https://dummyjson.com/posts/:id` | Full post update request |
-| PATCH | `https://dummyjson.com/posts/:id` | Partial post update request |
-| DELETE | `https://dummyjson.com/posts/:id` | Remove post request |
+## Author
 
-All requests run through the shared `apiRequest()` function in `assets/js/api.js`, which catches errors and checks HTTP status with `response.ok`.
+Created as part of a JavaScript course assignment.
 
-## Testing
 
-With Node.js installed, run the automated regression suite (26 tests):
-
-```bash
-npm test
-```
-
-Also check these browser scenarios manually before submitting:
-
-- Load the homepage and verify 12 posts are displayed initially.
-- Open a post and check its ID, content, and comments.
-- Add a comment, refresh, and verify it is still visible in this browser.
-- Edit a post using both PUT and PATCH; refresh to check persistence.
-- Delete a post; return to the homepage and verify it is no longer listed.
-- Try search, tag filtering, sorting, load-more, clear filters, and reset.
-- Simulate a failed API request (DevTools → Network → Offline) and check the visible error message.
-- Check desktop, tablet, and phone widths, including a narrow 320px viewport.
-
-## Publish on GitHub Pages
-
-This project is plain HTML/CSS/JavaScript — no build step is required.
-
-1. Commit and push the contents of the project to your GitHub repository.
-2. In the repository, open **Settings → Pages**.
-3. Under **Build and deployment**, select **Deploy from a branch**, then `main` and `/ (root)`.
-4. Open the GitHub Pages URL and repeat the browser checks above with the live DummyJSON API.
-5. Submit both your GitHub repository URL and GitHub Pages URL.
-
-The site uses a static-hosting-friendly detail route, `post.html?id=123`, rather than requiring a server-side `/posts/123` route.
-
-### Search engine indexing
-
-Both HTML pages include `<meta name="robots" content="noindex">` because this is a student demo. This asks search engines not to index the pages, but **does not make the site private**. Your teacher can still access it using the public link.
