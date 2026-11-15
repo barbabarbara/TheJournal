@@ -215,9 +215,6 @@
             <p id="result-count" role="status">
               Three sample cards — design preview only.
             </p>
-            <span class="design-indicator">
-              <span aria-hidden="true"></span> DESIGN PREVIEW
-            </span>
           </div>
 
           <!-- API errors will be displayed here -->
@@ -379,10 +376,20 @@
             </article>
           </div>
 
+          <!-- Load additional articles without reloading the page. -->
+          <button
+            type="button"
+            id="load-more"
+            class="button button-dark"
+            hidden
+          >
+            Load more stories
+          </button>
+
           <!-- Displayed when search or filters return no results -->
           <div class="empty-state" id="empty-state" hidden>
             <h3>No stories found</h3>
-            <p>Try a different search or change your filters.</p>
+            <p>There are no articles available at the moment.</p>
           </div>
         </div>
       </section>
@@ -433,5 +440,8 @@
       </div>
     </footer>
     <!-- END FOOTER -->
+
+    <!-- Homepage JavaScript module -->
+    <script type="module" src="./assets/js/app.js"></script>
   </body>
 </html>

@@ -1016,6 +1016,12 @@ p {
   color: var(--ink-soft);
 }
 
+/* Center the Load more button beneath the article grid. */
+#load-more {
+  display: block;
+  margin: 2rem auto 0;
+}
+
 /* ========== 11. POST DETAILS PAGE ========== */
 
 /* Limit the width so long articles remain comfortable to read. */
