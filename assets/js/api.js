@@ -1,4 +1,3 @@
-
 /* ========== THE JOURNAL — API SERVICE ========== */
 
 /* Base address of the DummyJSON REST API. */
@@ -25,9 +24,7 @@ async function getJSON(url) {
 
   // Check whether the HTTP response was successful.
   if (!response.ok) {
-    throw new Error(
-      `HTTP ${response.status}: ${response.statusText}`
-    );
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
   }
 
   try {
@@ -41,6 +38,9 @@ async function getJSON(url) {
   }
 }
 
+// export allows another JavaScript file to import it.
+// async means the function returns a Promise.
+
 /**
  * Fetch all blog posts from DummyJSON.
  *
@@ -52,4 +52,18 @@ export async function fetchPosts() {
 
   // Return only the posts array.
   return data.posts;
+}
+
+/**
+ * Fetch a single blog post by its ID.
+ *
+ * @param {number} postId - The ID of the requested post.
+ * @returns {Promise<Object>} The requested post object.
+ */
+export async function fetchPostById(postId) {
+  // Build the API URL using the post ID.
+  const url = `${API_BASE_URL}/posts/${postId}`;
+
+  // Request the post and return its parsed JSON data.
+  return await getJSON(url);
 }
