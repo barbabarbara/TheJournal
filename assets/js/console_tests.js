@@ -72,3 +72,47 @@
     console.log("Caught error:", error.message);
   }
 })();
+
+// Test 6 - test fetchCommentsByPostId
+
+
+(async () => {
+  // Import our new comments API function.
+  const { fetchCommentsByPostId } = await import(
+    "./assets/js/api.js"
+  );
+
+  // Fetch comments belonging to post 1.
+  const comments = await fetchCommentsByPostId(1);
+
+  // Display how many comments were returned.
+  console.log("Total comments:", comments.length);
+
+  // Display the comments in a table.
+  console.table(comments);
+
+  // Display the first comment, if one exists.
+  if (comments.length > 0) {
+    console.log("First comment:", comments[0].body);
+  }
+})();
+
+
+// Test 7 - Invlid ID
+
+
+(async () => {
+  const { fetchCommentsByPostId } = await import(
+    "./assets/js/api.js"
+  );
+
+  try {
+    // Request comments for a nonexistent post.
+    const comments = await fetchCommentsByPostId(999999);
+
+    console.log("Comments:", comments);
+  } catch (error) {
+    // Display the error if the API rejects the request.
+    console.log("Caught error:", error.message);
+  }
+})();

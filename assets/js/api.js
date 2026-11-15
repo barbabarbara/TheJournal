@@ -67,3 +67,20 @@ export async function fetchPostById(postId) {
   // Request the post and return its parsed JSON data.
   return await getJSON(url);
 }
+
+/**
+ * Fetch all comments belonging to a specific post.
+ *
+ * @param {number} postId - The ID of the blog post.
+ * @returns {Promise<Array>} An array of comment objects.
+ */
+export async function fetchCommentsByPostId(postId) {
+  // Build the URL using the requested post ID.
+  const url = `${API_BASE_URL}/posts/${postId}/comments`;
+
+  // Fetch the comments and parse the JSON response.
+  const data = await getJSON(url);
+
+  // Return only the comments array.
+  return data.comments;
+}
