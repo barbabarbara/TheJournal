@@ -121,11 +121,7 @@
           <p>Our most-read story, straight from DummyJSON.</p>
         </div>
 
-        <!--
-          Temporary visual preview for M3.
-          During API integration, JavaScript will replace the contents of
-          #featured-post with the actual most-viewed article.
-        -->
+        <!-- Featured story placeholder; dynamic rendering is not yet implemented. -->
         <div class="featured-post" id="featured-post" aria-live="polite">
           <!-- Decorative feature artwork (created entirely with CSS). -->
           <div class="featured-visual" aria-hidden="true">
@@ -144,7 +140,7 @@
               Our most-read article will appear here when we connect the
               DummyJSON API. This is a temporary design preview for M3.
             </p>
-            <p class="featured-meta">Live article details arrive in M5</p>
+            <p class="featured-meta">Featured story coming soon</p>
           </div>
         </div>
       </section>
@@ -162,10 +158,7 @@
 
           <!-- ========== SEARCH, FILTER & SORT ========== -->
 
-          <!-- Search and browse controls -->
-          <!-- class="filter-toolbar" Allows  to style the form's layout. -->
-          <!-- id="filters" Allows JavaScript to find the form. -->
-          <!-- role="search" 	Tells assistive technologies this is a search area. -->
+          <!-- Search, filtering and sorting controls (implemented in M10). -->
           <form
             class="filter-toolbar"
             id="filters"
@@ -210,11 +203,9 @@
 
           <!-- ========== POST LIST ========== -->
 
-          <!-- Live API counts replace this design-preview message in M5. -->
           <div class="results-line">
-            <p id="result-count" role="status">
-              Three sample cards — design preview only.
-            </p>
+            <!-- Announces loading progress and the number of visible articles. -->
+            <p id="result-count" role="status">Loading stories…</p>
           </div>
 
           <!-- API errors will be displayed here -->
@@ -226,155 +217,8 @@
             <button type="button" id="retry-feed">Try again</button>
           </div>
 
-          <!--
-            M3 design previews. These are NOT real DummyJSON stories.
-            M5 will replace their contents with JavaScript-rendered cards.
-            All preview links lead to the placeholder article page.
-          -->
-          <div class="posts-grid" id="posts-grid" aria-busy="false">
-            <!-- Sample 1: static preview; JavaScript will replace it in M5. -->
-            <article class="post-card">
-              <div class="card-top">
-                <span class="card-number">PREVIEW / 001</span>
-                <span class="card-arrow" aria-hidden="true">↗</span>
-              </div>
-
-              <div class="card-main">
-                <div class="tag-list">
-                  <span class="tag">Ideas</span>
-                  <span class="tag">Perspective</span>
-                </div>
-
-                <a class="card-title-link" href="./post.html?id=12">
-                  <h3 class="card-title">
-                    The art of noticing everyday details
-                  </h3>
-                </a>
-
-                <p class="card-excerpt">
-                  Good stories begin with curiosity. This example card
-                  demonstrates how a headline and short excerpt will appear in
-                  the finished article feed.
-                </p>
-              </div>
-
-              <div class="card-meta">
-                <span>◉ Views pending</span>
-                <span>♥ Likes pending</span>
-              </div>
-
-              <div class="card-actions">
-                <a class="card-read" href="./post.html?id=12">
-                  View article layout ↗
-                </a>
-                <button class="card-secondary" type="button" disabled>
-                  Edit
-                </button>
-                <button
-                  class="card-secondary card-delete"
-                  type="button"
-                  disabled
-                >
-                  Delete
-                </button>
-              </div>
-            </article>
-
-            <!-- Sample 2: static preview; JavaScript will replace it in M5. -->
-            <article class="post-card">
-              <div class="card-top">
-                <span class="card-number">PREVIEW / 002</span>
-                <span class="card-arrow" aria-hidden="true">↗</span>
-              </div>
-
-              <div class="card-main">
-                <div class="tag-list">
-                  <span class="tag">Culture</span>
-                  <span class="tag">Inspiration</span>
-                </div>
-
-                <a class="card-title-link" href="./post.html?id=12">
-                  <h3 class="card-title">
-                    A fresh way to look at familiar things
-                  </h3>
-                </a>
-
-                <p class="card-excerpt">
-                  The Journal gives each story space to breathe. This sample
-                  shows a longer heading, supporting text, and a clear path to
-                  the article page.
-                </p>
-              </div>
-
-              <div class="card-meta">
-                <span>◉ Views pending</span>
-                <span>♥ Likes pending</span>
-              </div>
-
-              <div class="card-actions">
-                <a class="card-read" href="./post.html?id=12">
-                  View article layout ↗
-                </a>
-                <button class="card-secondary" type="button" disabled>
-                  Edit
-                </button>
-                <button
-                  class="card-secondary card-delete"
-                  type="button"
-                  disabled
-                >
-                  Delete
-                </button>
-              </div>
-            </article>
-
-            <!-- Sample 3: static preview; JavaScript will replace it in M5. -->
-            <article class="post-card">
-              <div class="card-top">
-                <span class="card-number">PREVIEW / 003</span>
-                <span class="card-arrow" aria-hidden="true">↗</span>
-              </div>
-
-              <div class="card-main">
-                <div class="tag-list">
-                  <span class="tag">Stories</span>
-                  <span class="tag">Reflections</span>
-                </div>
-
-                <a class="card-title-link" href="./post.html?id=12">
-                  <h3 class="card-title">
-                    Why thoughtful stories stay with us
-                  </h3>
-                </a>
-
-                <p class="card-excerpt">
-                  From the smallest observation to a larger conversation, every
-                  card follows the same clean, responsive editorial design.
-                </p>
-              </div>
-
-              <div class="card-meta">
-                <span>◉ Views pending</span>
-                <span>♥ Likes pending</span>
-              </div>
-
-              <div class="card-actions">
-                <a class="card-read" href="./post.html?id=12">
-                  View article layout ↗
-                </a>
-                <button class="card-secondary" type="button" disabled>
-                  Edit
-                </button>
-                <button
-                  class="card-secondary card-delete"
-                  type="button"
-                  disabled
-                >
-                  Delete
-                </button>
-              </div>
-            </article>
-          </div>
+          <!-- Article cards are generated dynamically by app.js. -->
+          <div class="posts-grid" id="posts-grid" aria-busy="false"></div>
 
           <!-- Load additional articles without reloading the page. -->
           <button
@@ -388,7 +232,7 @@
 
           <!-- Displayed when search or filters return no results -->
           <div class="empty-state" id="empty-state" hidden>
-            <h3>No stories found</h3>
+            <h3>No stories available</h3>
             <p>There are no articles available at the moment.</p>
           </div>
         </div>

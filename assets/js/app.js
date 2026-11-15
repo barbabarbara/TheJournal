@@ -1,5 +1,13 @@
 /* ========== THE JOURNAL — HOMEPAGE ========== */
 
+/* 
+app.js has four main responsibilities:
+    1. Find elements that already exist in index.html.
+    2. Create article cards dynamically using data from DummyJSON.
+    3. Decide how many articles should be displayed.
+    4. Handle loading, errors, empty results, and button clicks.
+ */
+
 // Import the existing API function.
 import { fetchPosts } from "./api.js";
 
