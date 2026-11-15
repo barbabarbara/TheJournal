@@ -1,4 +1,3 @@
-
 /* ========== THE JOURNAL — API SERVICE ========== */
 
 /* Base address of the DummyJSON REST API. */
@@ -119,9 +118,7 @@ export async function fetchCommentsByPostId(postId) {
   validatePostId(postId);
 
   // Request all comments belonging to the selected post.
-  const data = await apiRequest(
-    `/comments/post/${postId}?limit=0`
-  );
+  const data = await apiRequest(`/comments/post/${postId}?limit=0`);
 
   // Verify that the response contains a comments array.
   if (!Array.isArray(data?.comments)) {
@@ -130,4 +127,37 @@ export async function fetchCommentsByPostId(postId) {
 
   // Return only the comments array.
   return data.comments;
+}
+
+/**
+ * Create a new comment for a blog post.
+ *
+ * DummyJSON simulates creation without permanently saving data.
+ *
+ * @param {number} postId - The ID of the blog post.
+ * @param {string} body - The comment text.
+ * @returns {Promise<Object>} The simulated created comment.
+ */
+export async function createComment(postId, body) {
+  // Validate the post ID before sending the request.
+  validatePostId(postId);
+
+  // Verify that the comment contains meaningful text.
+  if (typeof body !== "string" || !body.trim()) {
+    throw new TypeError("Comment text cannot be empty.");
+  }
+
+  // Prepare the comment data required by DummyJSON.
+  const comment = {
+    body: body.trim(),
+    postId,
+    // For now userID: 1, I will revisit that when implementing the comments interface.
+    userId: 1,
+  };
+
+  // Send the comment as JSON using an HTTP POST request.
+  return apiRequest("/comments/add", {
+    method: "POST",
+    body: JSON.stringify(comment),
+  });
 }

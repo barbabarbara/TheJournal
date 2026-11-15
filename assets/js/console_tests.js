@@ -1,4 +1,3 @@
-
 /* ========== THE JOURNAL — MANUAL API TESTS ========== */
 
 /*
@@ -15,11 +14,8 @@
 /* ========== 01. IMPORT API FUNCTIONS ========== */
 
 (async () => {
-  const {
-    fetchPosts,
-    fetchPostById,
-    fetchCommentsByPostId,
-  } = await import("./assets/js/api.js");
+  const { fetchPosts, fetchPostById, fetchCommentsByPostId } =
+    await import("./assets/js/api.js");
 
   /* ========== 02. TEST HELPER ========== */
 
@@ -183,31 +179,123 @@
     throw new Error("Expected a TypeError for invalid ID.");
   });
 
-  /* ========== 07. NETWORK FAILURE DEMONSTRATION ========== */
+  /* ========== 07. NETWORK FAILURE TEST ========== */
 
   /*
-   * Test 10:
-   * Demonstrate that a rejected fetch() call throws.
+   * Test 10 — Native fetch rejection.
    *
-   * This tests native fetch(), not the private apiRequest()
-   * helper in api.js.
+   * Verify that a rejected fetch() request produces a TypeError.
+   *
+   * Note:
+   * This tests the browser's native fetch() behavior,
+   * not the private apiRequest() helper.
    */
   await runTest("Native fetch rejection", async () => {
     try {
-      // Chrome normally blocks requests to this restricted port.
+      // Chrome blocks requests to this restricted port.
       await fetch("http://127.0.0.1:1/");
     } catch (error) {
+      // Confirm that the rejected request produced a TypeError.
       if (error instanceof TypeError) {
         return;
       }
 
+      // Fail the test if another error type was thrown.
       throw error;
     }
 
+    // Fail if fetch() unexpectedly succeeds.
     throw new Error("Expected fetch() to reject.");
   });
 
-  /* ========== 08. TESTS FINISHED ========== */
+  /* ========== 08. POST COMMENT TESTS ========== */
+
+  /*
+   * Test 11 — Create a comment successfully.
+   *
+   * Verify that the API returns the expected comment data.
+   * DummyJSON simulates creation without permanently saving it.
+   */
+  await runTest("Create a comment", async () => {
+    const postId = 5;
+    const body = "This is my first API comment!";
+
+    // Send a new comment using an HTTP POST request.
+    const comment = await createComment(postId, body);
+
+    // Verify that the response contains the expected post ID.
+    if (comment.postId !== postId) {
+      throw new Error("Returned comment has an incorrect post ID.");
+    }
+
+    // Verify that the response contains the submitted text.
+    if (comment.body !== body) {
+      throw new Error("Returned comment has incorrect text.");
+    }
+
+    // Verify that the API returned a comment ID.
+    if (!Number.isSafeInteger(comment.id) || comment.id <= 0) {
+      throw new Error("Returned comment has an invalid ID.");
+    }
+
+    // Display the successfully created comment.
+    console.log("Created comment:", comment);
+  });
+
+  /*
+   * Test 12 — Reject empty comment text.
+   *
+   * Verify that whitespace-only comments are rejected
+   * before an HTTP request is sent.
+   */
+  await runTest("Reject empty comment", async () => {
+    try {
+      // Attempt to create a comment containing only spaces.
+      await createComment(5, "   ");
+    } catch (error) {
+      // Confirm that input validation produced a TypeError.
+      if (
+        error instanceof TypeError &&
+        error.message === "Comment text cannot be empty."
+      ) {
+        return;
+      }
+
+      // Fail if an unexpected error was thrown.
+      throw error;
+    }
+
+    // Fail if the invalid comment was accepted.
+    throw new Error("Expected empty comment validation to fail.");
+  });
+
+  /*
+   * Test 13 — Reject invalid post IDs when creating comments.
+   *
+   * Verify that negative IDs cannot be submitted.
+   */
+  await runTest("Reject invalid comment post ID", async () => {
+    try {
+      // Attempt to create a comment for an invalid post ID.
+      await createComment(-5, "Test comment");
+    } catch (error) {
+      // Confirm that the post ID validation rejected the input.
+      if (
+        error instanceof TypeError &&
+        error.message === "Post ID must be a positive integer."
+      ) {
+        return;
+      }
+
+      // Fail if the wrong error was thrown.
+      throw error;
+    }
+
+    // Fail if the invalid post ID was accepted.
+    throw new Error("Expected post ID validation to fail.");
+  });
+
+  /* ========== 09. TESTS FINISHED ========== */
 
   console.log("All manual API tests have finished.");
 })();
