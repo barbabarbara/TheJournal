@@ -1,45 +1,80 @@
+
 /* ========== THE JOURNAL — API SERVICE ========== */
 
 /* Base address of the DummyJSON REST API. */
 const API_BASE_URL = "https://dummyjson.com";
 
 /**
- * Send a GET request and return parsed JSON data.
+ * Send an HTTP request and return parsed JSON data.
  *
- * @param {string} url - The complete API URL.
- * @returns {Promise<unknown>} The parsed JSON data.
+ * Supports GET, POST, PATCH, PUT, and DELETE requests.
+ *
+ * @param {string} endpoint - The API endpoint.
+ * @param {RequestInit} [options={}] - Fetch request settings.
+ * @returns {Promise<unknown>} The parsed response data.
  */
-async function getJSON(url) {
+async function apiRequest(endpoint, options = {}) {
+  // Build the complete URL using the API base address.
+  const url = `${API_BASE_URL}${endpoint}`;
+
+  // Create headers while preserving custom headers.
+  const headers = new Headers(options.headers);
+
+  // Add the JSON content type when sending a request body.
+  if (options.body != null && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   let response;
 
   try {
-    // Send the HTTP GET request.
-    response = await fetch(url);
+    // Send the HTTP request using the supplied options.
+    response = await fetch(url, {
+      ...options,
+      headers,
+    });
   } catch (error) {
-    // Handle a rejected fetch request.
+    // Handle failed fetch requests without hiding
+    // unrelated programming or JSON parsing errors.
     throw new Error("Unable to contact the API server.", {
       cause: error,
     });
   }
 
-  // Check whether the HTTP response was successful.
+  // Reject unsuccessful HTTP responses.
   if (!response.ok) {
-    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    // Use a fallback when the server provides no status text.
+    const message = response.statusText || "Request failed";
+
+    throw new Error(`HTTP ${response.status}: ${message}`);
+  }
+
+  // Some successful responses contain no body.
+  if (response.status === 204) {
+    return null;
   }
 
   try {
-    // Convert the response body from JSON into JavaScript data.
+    // Parse the successful response body as JSON.
     return await response.json();
   } catch (error) {
-    // Handle invalid JSON returned by the server.
+    // Keep JSON parsing failures separate from network errors.
     throw new Error("The API returned invalid JSON.", {
       cause: error,
     });
   }
 }
 
-// export allows another JavaScript file to import it.
-// async means the function returns a Promise.
+/**
+ * Validate that a post ID is a positive integer.
+ *
+ * @param {number} postId - The post ID to validate.
+ */
+function validatePostId(postId) {
+  if (!Number.isSafeInteger(postId) || postId <= 0) {
+    throw new TypeError("Post ID must be a positive integer.");
+  }
+}
 
 /**
  * Fetch all blog posts from DummyJSON.
@@ -47,8 +82,13 @@ async function getJSON(url) {
  * @returns {Promise<Array>} An array of post objects.
  */
 export async function fetchPosts() {
-  // Retrieve and parse the API response.
-  const data = await getJSON(`${API_BASE_URL}/posts?limit=0`);
+  // Retrieve the API response containing all posts.
+  const data = await apiRequest("/posts?limit=0");
+
+  // Verify that the response contains a posts array.
+  if (!Array.isArray(data?.posts)) {
+    throw new Error("The API returned an invalid posts array.");
+  }
 
   // Return only the posts array.
   return data.posts;
@@ -61,11 +101,11 @@ export async function fetchPosts() {
  * @returns {Promise<Object>} The requested post object.
  */
 export async function fetchPostById(postId) {
-  // Build the API URL using the post ID.
-  const url = `${API_BASE_URL}/posts/${postId}`;
+  // Reject invalid IDs before sending a request.
+  validatePostId(postId);
 
-  // Request the post and return its parsed JSON data.
-  return await getJSON(url);
+  // Request the selected post.
+  return apiRequest(`/posts/${postId}`);
 }
 
 /**
@@ -75,11 +115,18 @@ export async function fetchPostById(postId) {
  * @returns {Promise<Array>} An array of comment objects.
  */
 export async function fetchCommentsByPostId(postId) {
-  // Build the URL using the requested post ID.
-  const url = `${API_BASE_URL}/posts/${postId}/comments`;
+  // Reject invalid IDs before sending a request.
+  validatePostId(postId);
 
-  // Fetch the comments and parse the JSON response.
-  const data = await getJSON(url);
+  // Request all comments belonging to the selected post.
+  const data = await apiRequest(
+    `/comments/post/${postId}?limit=0`
+  );
+
+  // Verify that the response contains a comments array.
+  if (!Array.isArray(data?.comments)) {
+    throw new Error("The API returned an invalid comments array.");
+  }
 
   // Return only the comments array.
   return data.comments;

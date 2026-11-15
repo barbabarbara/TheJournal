@@ -1,118 +1,213 @@
-// Test 1 — Successful API request
+
+/* ========== THE JOURNAL — MANUAL API TESTS ========== */
+
+/*
+ * Purpose:
+ * Verify the GET functions, response handling, and input validation
+ * implemented in assets/js/api.js.
+ *
+ * Run these tests in Chrome DevTools Console while the website
+ * is open through Live Server.
+ *
+ * These tests use real HTTP requests to DummyJSON.
+ */
+
+/* ========== 01. IMPORT API FUNCTIONS ========== */
 
 (async () => {
-  const { fetchPosts } = await import("./assets/js/api.js");
+  const {
+    fetchPosts,
+    fetchPostById,
+    fetchCommentsByPostId,
+  } = await import("./assets/js/api.js");
 
-  const posts = await fetchPosts();
+  /* ========== 02. TEST HELPER ========== */
 
-  console.log("Total posts:", posts.length);
-  console.table(posts.slice(0, 3));
-})();
+  /**
+   * Run one test and display a clear PASS or FAIL message.
+   *
+   * @param {string} name - Description of the test.
+   * @param {Function} testFunction - Async function to test.
+   */
+  async function runTest(name, testFunction) {
+    try {
+      // Execute the test and wait until it finishes.
+      await testFunction();
 
-// Test 2 — HTTP 404 error
-
-(async () => {
-  try {
-    // Deliberately request a nonexistent endpoint.
-    const response = await fetch(
-      "https://dummyjson.com/this-endpoint-does-not-exist",
-    );
-
-    // Check the HTTP status, just like getJSON().
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      // Display success only if no assertion failed.
+      console.log(`PASS — ${name}`);
+    } catch (error) {
+      // Display unexpected errors and failed assertions.
+      console.error(`FAIL — ${name}`, error);
     }
-  } catch (error) {
-    console.log("Caught error:", error.message);
   }
-})();
 
-// Test 3 — Network failure
+  /* ========== 03. GET REQUEST TESTS ========== */
 
-(async () => {
-  try {
-    await fetch("http://127.0.0.1:1/");
-  } catch (error) {
-    console.log("Network request failed.");
-    console.log("Error type:", error.name);
-  }
-})();
+  // Test 1 — Retrieve all blog posts.
+  await runTest("Fetch all posts", async () => {
+    const posts = await fetchPosts();
 
-// Test 4 — test fetchPostById
+    // Confirm that the result is a non-empty array.
+    if (!Array.isArray(posts) || posts.length === 0) {
+      throw new Error("Expected a non-empty posts array.");
+    }
 
-(async () => {
-  // Import the new function from api.js.
-  const { fetchPostById } = await import("./assets/js/api.js");
+    console.log("Total posts:", posts.length);
+    console.table(posts.slice(0, 3));
+  });
 
-  // Retrieve the post with ID 5.
-  const post = await fetchPostById(5);
+  // Test 2 — Retrieve one post by ID.
+  await runTest("Fetch post ID 5", async () => {
+    const post = await fetchPostById(5);
 
-  // Display the complete post.
-  console.log("Post object:", post);
+    // Verify that the API returned the requested post.
+    if (post.id !== 5) {
+      throw new Error("Expected post ID 5.");
+    }
 
-  // Display selected properties.
-  console.log("ID:", post.id);
-  console.log("Title:", post.title);
-  console.log("Body:", post.body);
-})();
+    console.log("Post:", post.title);
+  });
 
+  // Test 3 — Retrieve comments belonging to post 1.
+  await runTest("Fetch comments for post 1", async () => {
+    const comments = await fetchCommentsByPostId(1);
 
-// Test 5 - Request an invalid post ID
+    // Verify that the response contains an array.
+    if (!Array.isArray(comments)) {
+      throw new Error("Expected a comments array.");
+    }
 
-(async () => {
-  const { fetchPostById } = await import("./assets/js/api.js");
+    // Verify that every returned comment belongs to post 1.
+    if (!comments.every((comment) => comment.postId === 1)) {
+      throw new Error("Some comments belong to another post.");
+    }
 
-  try {
-    // Request a post that does not exist.
-    const post = await fetchPostById(999999);
+    console.log("Total comments:", comments.length);
+    console.table(comments.slice(0, 3));
+  });
 
-    console.log("Post:", post);
-  } catch (error) {
-    // Display the error thrown by getJSON().
-    console.log("Caught error:", error.message);
-  }
-})();
+  /* ========== 04. EMPTY RESULT TESTS ========== */
 
-// Test 6 - test fetchCommentsByPostId
+  // Test 4 — A post can have zero comments.
+  await runTest("Handle empty comments array", async () => {
+    const comments = await fetchCommentsByPostId(5);
 
+    // An empty array is valid; it is not an API error.
+    if (!Array.isArray(comments)) {
+      throw new Error("Expected a comments array.");
+    }
 
-(async () => {
-  // Import our new comments API function.
-  const { fetchCommentsByPostId } = await import(
-    "./assets/js/api.js"
-  );
+    console.log("Comments returned:", comments.length);
+  });
 
-  // Fetch comments belonging to post 1.
-  const comments = await fetchCommentsByPostId(1);
+  /* ========== 05. HTTP ERROR TESTS ========== */
 
-  // Display how many comments were returned.
-  console.log("Total comments:", comments.length);
+  // Test 5 — Request a nonexistent post.
+  await runTest("Handle HTTP 404 for posts", async () => {
+    try {
+      await fetchPostById(999999);
+    } catch (error) {
+      // Confirm that the expected HTTP status was reported.
+      if (error.message.includes("HTTP 404")) {
+        return;
+      }
 
-  // Display the comments in a table.
-  console.table(comments);
+      // An unexpected error should fail this test.
+      throw error;
+    }
 
-  // Display the first comment, if one exists.
-  if (comments.length > 0) {
-    console.log("First comment:", comments[0].body);
-  }
-})();
+    // Reaching this line means no error was thrown.
+    throw new Error("Expected HTTP 404, but request succeeded.");
+  });
 
+  // Test 6 — Request comments for a nonexistent post.
+  await runTest("Handle HTTP 404 for comments", async () => {
+    try {
+      await fetchCommentsByPostId(999999);
+    } catch (error) {
+      if (error.message.includes("HTTP 404")) {
+        return;
+      }
 
-// Test 7 - Invlid ID
+      throw error;
+    }
 
+    throw new Error("Expected HTTP 404, but request succeeded.");
+  });
 
-(async () => {
-  const { fetchCommentsByPostId } = await import(
-    "./assets/js/api.js"
-  );
+  /* ========== 06. INPUT VALIDATION TESTS ========== */
 
-  try {
-    // Request comments for a nonexistent post.
-    const comments = await fetchCommentsByPostId(999999);
+  // Test 7 — Reject a negative post ID.
+  await runTest("Reject negative post ID", async () => {
+    try {
+      await fetchPostById(-5);
+    } catch (error) {
+      if (error instanceof TypeError) {
+        return;
+      }
 
-    console.log("Comments:", comments);
-  } catch (error) {
-    // Display the error if the API rejects the request.
-    console.log("Caught error:", error.message);
-  }
+      throw error;
+    }
+
+    throw new Error("Expected a TypeError for negative ID.");
+  });
+
+  // Test 8 — Reject a decimal post ID.
+  await runTest("Reject decimal post ID", async () => {
+    try {
+      await fetchPostById(2.5);
+    } catch (error) {
+      if (error instanceof TypeError) {
+        return;
+      }
+
+      throw error;
+    }
+
+    throw new Error("Expected a TypeError for decimal ID.");
+  });
+
+  // Test 9 — Reject an invalid comments post ID.
+  await runTest("Reject invalid comments post ID", async () => {
+    try {
+      await fetchCommentsByPostId(-1);
+    } catch (error) {
+      if (error instanceof TypeError) {
+        return;
+      }
+
+      throw error;
+    }
+
+    throw new Error("Expected a TypeError for invalid ID.");
+  });
+
+  /* ========== 07. NETWORK FAILURE DEMONSTRATION ========== */
+
+  /*
+   * Test 10:
+   * Demonstrate that a rejected fetch() call throws.
+   *
+   * This tests native fetch(), not the private apiRequest()
+   * helper in api.js.
+   */
+  await runTest("Native fetch rejection", async () => {
+    try {
+      // Chrome normally blocks requests to this restricted port.
+      await fetch("http://127.0.0.1:1/");
+    } catch (error) {
+      if (error instanceof TypeError) {
+        return;
+      }
+
+      throw error;
+    }
+
+    throw new Error("Expected fetch() to reject.");
+  });
+
+  /* ========== 08. TESTS FINISHED ========== */
+
+  console.log("All manual API tests have finished.");
 })();
