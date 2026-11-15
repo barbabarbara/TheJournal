@@ -1,6 +1,5 @@
 /* ========== THE JOURNAL — VALIDATORS ========== */
 
-import { countCharacters } from "./utils.js";
 /**
  * Validate that a post ID is a positive integer.
  *
@@ -75,7 +74,7 @@ export function validatePostUpdate(payload) {
       if (
         value.some(
           (tag) =>
-            typeof tag !== "string" || !tag.trim() || countCharacters(tag.trim()) > 30,
+            typeof tag !== "string" || !tag.trim() || tag.trim().length > 30,
         )
       ) {
         throw new TypeError("Each tag must contain 1–30 characters.");
@@ -92,7 +91,7 @@ export function validatePostUpdate(payload) {
       if (
         typeof value !== "string" ||
         !value.trim() ||
-        countCharacters(value.trim()) > textLimits[field]
+        value.trim().length > textLimits[field]
       ) {
         throw new TypeError(
           `${field} must contain 1–${textLimits[field]} characters.`,
