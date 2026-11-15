@@ -182,3 +182,22 @@ export async function updatePost(postId, payload, method = "PATCH") {
     body: JSON.stringify(normalizedPayload),
   });
 }
+
+/**
+ * Delete a blog post by its ID.
+ *
+ * DummyJSON simulates deletion without permanently
+ * removing the post.
+ *
+ * @param {number} postId - The ID of the post to delete.
+ * @returns {Promise<Object>} The API deletion response.
+ */
+export async function deletePost(postId) {
+  // Validate the post ID before sending the request.
+  validatePostId(postId);
+
+  // Send an HTTP DELETE request.
+  return apiRequest(`/posts/${postId}`, {
+    method: "DELETE",
+  });
+}

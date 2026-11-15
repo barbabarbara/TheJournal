@@ -16,3 +16,24 @@ export function countCharacters(text) {
   // Count the resulting segments.
   return Array.from(segmenter.segment(text)).length;
 }
+
+
+// export function countCharacters(text) {
+//   // Create a grapheme segmenter.
+//   const segmenter = new Intl.Segmenter(undefined, {
+//     granularity: "grapheme",
+//   });
+
+//   // Divide the text into grapheme segments.
+//   const segments = segmenter.segment(text);
+
+//   // Convert the segments iterable into a normal array.
+//   const characters = Array.from(segments);
+
+//   // Count the elements in the resulting array.
+//   const count = characters.length;
+
+//   // Return the number.
+//   return count;
+// }
+
