@@ -1,39 +1,50 @@
 
-/**
- * Count user-perceived characters in a string.
- *
- * Handles emojis and combined Unicode characters.
- *
- * @param {string} text - The text to count.
- * @returns {number} The number of grapheme clusters.
- */
-export function countCharacters(text) {
-  // Split the string into user-perceived characters.
-  const segmenter = new Intl.Segmenter(undefined, {
-    granularity: "grapheme",
-  });
+/* ----- Character utilities ----- */
 
-  // Count the resulting segments.
-  return Array.from(segmenter.segment(text)).length;
+// Create one reusable grapheme segmenter.
+const segmenter = new Intl.Segmenter(undefined, {
+  granularity: "grapheme",
+});
+
+/**
+ * Split a string into user-perceived characters.
+ *
+ * @param {string} text
+ * @returns {string[]}
+ */
+export function getCharacters(text) {
+  return Array.from(
+    segmenter.segment(text),
+    ({ segment }) => segment,
+  );
 }
 
+/**
+ * Count user-perceived characters.
+ *
+ * @param {string} text
+ * @returns {number}
+ */
+export function countCharacters(text) {
+  return getCharacters(text).length;
+}
 
-// export function countCharacters(text) {
-//   // Create a grapheme segmenter.
-//   const segmenter = new Intl.Segmenter(undefined, {
-//     granularity: "grapheme",
-//   });
+/**
+ * Shorten text without splitting complex characters.
+ *
+ * @param {string} text
+ * @param {number} maxLength
+ * @returns {string}
+ */
+export function truncateText(text, maxLength) {
+  const characters = getCharacters(text);
 
-//   // Divide the text into grapheme segments.
-//   const segments = segmenter.segment(text);
+  if (characters.length <= maxLength) {
+    return text;
+  }
 
-//   // Convert the segments iterable into a normal array.
-//   const characters = Array.from(segments);
-
-//   // Count the elements in the resulting array.
-//   const count = characters.length;
-
-//   // Return the number.
-//   return count;
-// }
-
+  return `${characters
+    .slice(0, maxLength)
+    .join("")
+    .trimEnd()}…`;
+}

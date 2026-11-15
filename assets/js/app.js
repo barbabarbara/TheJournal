@@ -10,7 +10,7 @@ app.js has four main responsibilities:
 
 // Import the existing API function.
 import { fetchPosts } from "./api.js";
-import { countCharacters } from "./utils.js";
+import { truncateText } from "./utils.js";
 
 /* ========== 01. DOM ELEMENTS ========== */
 
@@ -61,7 +61,7 @@ function createPostCard(post) {
   const cardTop = document.createElement("div");
   cardTop.className = "card-top";
 
-  // Display the article ID.
+  // Display the article ID with leading zeroes.
   const cardNumber = document.createElement("span");
   cardNumber.className = "card-number";
   cardNumber.textContent = `STORY / ${String(post.id).padStart(3, "0")}`;
@@ -83,7 +83,7 @@ function createPostCard(post) {
   const tagList = document.createElement("div");
   tagList.className = "tag-list";
 
-  // Display up to 3 tags for a compact card.
+  // Display up to three tags.
   for (const tag of (post.tags ?? []).slice(0, 3)) {
     const tagElement = document.createElement("span");
     tagElement.className = "tag";
@@ -92,7 +92,7 @@ function createPostCard(post) {
     tagList.append(tagElement);
   }
 
-  // Create the article link.
+  // Create a link to the full article.
   const titleLink = document.createElement("a");
   titleLink.className = "card-title-link";
   titleLink.href = `./post.html?id=${post.id}`;
@@ -104,27 +104,10 @@ function createPostCard(post) {
 
   titleLink.append(title);
 
-  // Create a shorter article preview.
+  // Create an article preview using our reusable utility.
   const excerpt = document.createElement("p");
   excerpt.className = "card-excerpt";
-
-  let shortBody = post.body;
-
-  // Shorten only when the text exceeds the character limit.
-  if (countCharacters(post.body) > MAX_EXCERPT_LENGTH) {
-    // Split text into complete, user-perceived characters.
-    const characters = Array.from(
-      new Intl.Segmenter(undefined, {
-        granularity: "grapheme",
-      }).segment(post.body),
-      ({ segment }) => segment,
-    );
-
-    // Keep the first 175 characters and add an ellipsis.
-    shortBody = `${characters.slice(0, MAX_EXCERPT_LENGTH).join("").trimEnd()}…`;
-  }
-
-  excerpt.textContent = shortBody;
+  excerpt.textContent = truncateText(post.body, MAX_EXCERPT_LENGTH);
 
   // Assemble the main content.
   cardMain.append(tagList, titleLink, excerpt);
@@ -134,11 +117,11 @@ function createPostCard(post) {
   const cardMeta = document.createElement("div");
   cardMeta.className = "card-meta";
 
-  // Display article views.
+  // Display article views, defaulting to zero when missing.
   const views = document.createElement("span");
   views.textContent = `◉ ${post.views ?? 0} views`;
 
-  // Display article likes.
+  // Display article likes, defaulting to zero when missing.
   const likes = document.createElement("span");
   likes.textContent = `♥ ${post.reactions?.likes ?? 0} likes`;
 
