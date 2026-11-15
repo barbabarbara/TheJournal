@@ -10,6 +10,7 @@ app.js has four main responsibilities:
 
 // Import the existing API function.
 import { fetchPosts } from "./api.js";
+import { countCharacters } from "./utils.js";
 
 /* ========== 01. DOM ELEMENTS ========== */
 
@@ -37,6 +38,7 @@ const retryButton = document.querySelector("#retry-feed");
 const emptyState = document.querySelector("#empty-state");
 
 const PAGE_SIZE = 12;
+const MAX_EXCERPT_LENGTH = 175;
 
 let allPosts = [];
 let visibleCount = PAGE_SIZE;
@@ -81,8 +83,8 @@ function createPostCard(post) {
   const tagList = document.createElement("div");
   tagList.className = "tag-list";
 
-  // Display up to two tags for a compact card.
-  for (const tag of (post.tags ?? []).slice(0, 2)) {
+  // Display up to 3 tags for a compact card.
+  for (const tag of (post.tags ?? []).slice(0, 3)) {
     const tagElement = document.createElement("span");
     tagElement.className = "tag";
     tagElement.textContent = tag;
@@ -106,12 +108,21 @@ function createPostCard(post) {
   const excerpt = document.createElement("p");
   excerpt.className = "card-excerpt";
 
-  const maxExcerptLength = 175;
+  let shortBody = post.body;
 
-  const shortBody =
-    post.body.length > maxExcerptLength
-      ? `${post.body.slice(0, maxExcerptLength).trimEnd()}…`
-      : post.body;
+  // Shorten only when the text exceeds the character limit.
+  if (countCharacters(post.body) > MAX_EXCERPT_LENGTH) {
+    // Split text into complete, user-perceived characters.
+    const characters = Array.from(
+      new Intl.Segmenter(undefined, {
+        granularity: "grapheme",
+      }).segment(post.body),
+      ({ segment }) => segment,
+    );
+
+    // Keep the first 175 characters and add an ellipsis.
+    shortBody = `${characters.slice(0, MAX_EXCERPT_LENGTH).join("").trimEnd()}…`;
+  }
 
   excerpt.textContent = shortBody;
 
@@ -176,9 +187,6 @@ function renderPosts() {
 
   // Replace the previous cards with the new selection.
   postsGrid.replaceChildren(fragment);
-
-  // Announce that rendering is complete.
-  postsGrid.setAttribute("aria-busy", "false");
 
   // Display the empty state only when there are no posts.
   emptyState.hidden = allPosts.length > 0;
