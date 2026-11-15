@@ -20,8 +20,10 @@ const postsGrid = document.querySelector("#posts-grid");
 // Find the element displaying the number of articles.
 const resultCount = document.querySelector("#result-count");
 
-// Find the "Load more" button.
-const loadMoreButton = document.querySelector("#load-more");
+const pagination = document.querySelector("#pagination");
+const prevPageButton = document.querySelector("#prev-page");
+const nextPageButton = document.querySelector("#next-page");
+const pageInfo = document.querySelector("#page-info");
 
 /* ----- Loading, error and empty-state elements ----- */
 
@@ -41,7 +43,7 @@ const PAGE_SIZE = 12;
 const MAX_EXCERPT_LENGTH = 175;
 
 let allPosts = [];
-let visibleCount = PAGE_SIZE;
+let currentPage = 1;
 
 /* ========== 02. CREATE ARTICLE CARD ========== */
 
@@ -147,43 +149,63 @@ function createPostCard(post) {
   return article;
 }
 
-/* ========== 03. LOAD ARTICLES ========== */
+
+/* ========== 03. RENDER ARTICLES ========== */
 
 /**
- * Render the currently visible articles.
- *
- * Displays the empty state when no articles are available.
+ * Display one page of articles.
  *
  * @returns {void}
  */
 function renderPosts() {
-  // Select up to the requested number of articles.
-  const visiblePosts = allPosts.slice(0, visibleCount);
+  // Calculate the total number of pages.
+  const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
 
-  // Create a temporary container for article cards.
+  // Calculate the first article's index.
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+
+  // Select only the articles for the current page.
+  const visiblePosts = allPosts.slice(
+    startIndex,
+    startIndex + PAGE_SIZE,
+  );
+
+  // Create a temporary container for the article cards.
   const fragment = document.createDocumentFragment();
 
-  // Create one card for each visible article.
   for (const post of visiblePosts) {
     fragment.append(createPostCard(post));
   }
 
-  // Replace the previous cards with the new selection.
+  // Replace the previous page's article cards.
   postsGrid.replaceChildren(fragment);
 
-  // Display the empty state only when there are no posts.
+  // Display the empty state if no articles exist.
   emptyState.hidden = allPosts.length > 0;
 
-  // Update the accessible result count.
+  // Update the number of displayed articles.
   if (allPosts.length === 0) {
     resultCount.textContent = "No stories available.";
   } else {
-    resultCount.textContent = `Showing ${visiblePosts.length} of ${allPosts.length} stories.`;
+    const first = startIndex + 1;
+    const last = startIndex + visiblePosts.length;
+
+    resultCount.textContent =
+      `Showing ${first}–${last} of ${allPosts.length} stories.`;
   }
 
-  // Hide the button when no additional articles remain.
-  loadMoreButton.hidden = visiblePosts.length >= allPosts.length;
+  // Update the pagination information.
+  pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+  // Disable navigation buttons when appropriate.
+  prevPageButton.disabled = currentPage === 1;
+  nextPageButton.disabled = currentPage >= totalPages;
+
+  // Hide pagination if there is only one page or no articles.
+  pagination.hidden = totalPages <= 1;
 }
+
+/* ========== 04. LOAD ARTICLES ========== */
 
 /**
  * Fetch articles and update loading, error and empty states.
@@ -201,7 +223,7 @@ async function loadPosts() {
   // Hide old error and empty-state messages.
   errorBox.hidden = true;
   emptyState.hidden = true;
-  loadMoreButton.hidden = true;
+  pagination.hidden = true;
 
   // Indicate that the article list is loading.
   postsGrid.setAttribute("aria-busy", "true");
@@ -216,8 +238,7 @@ async function loadPosts() {
     // Fetch all articles from DummyJSON.
     allPosts = await fetchPosts();
 
-    // Reset pagination to the first 12 articles.
-    visibleCount = PAGE_SIZE;
+    currentPage = 1;
 
     // Render the posts or the empty state.
     renderPosts();
@@ -236,7 +257,7 @@ async function loadPosts() {
 
     errorBox.hidden = false;
     emptyState.hidden = true;
-    loadMoreButton.hidden = true;
+    pagination.hidden = true;
 
     resultCount.textContent = "Could not load stories.";
   } finally {
@@ -250,16 +271,32 @@ async function loadPosts() {
   }
 }
 
-// Load 12 more articles when the button is clicked.
-loadMoreButton.addEventListener("click", () => {
-  visibleCount += PAGE_SIZE;
-  renderPosts();
+/* ========== 05. EVENT LISTENERS ========== */
+
+// Display the previous page.
+prevPageButton.addEventListener("click", () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderPosts();
+    resultCount.scrollIntoView({ behavior: "smooth" });
+  }
+});
+
+// Display the next page.
+nextPageButton.addEventListener("click", () => {
+  const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
+
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderPosts();
+    resultCount.scrollIntoView({ behavior: "smooth" });
+  }
 });
 
 // Retry loading articles when the user clicks "Try again".
 retryButton.addEventListener("click", loadPosts);
 
-/* ========== 04. INITIALIZATION ========== */
+/* ========== 06. INITIALIZATION ========== */
 
 // Load articles when the homepage module runs.
 loadPosts();

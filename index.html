@@ -220,15 +220,23 @@
           <!-- Article cards are generated dynamically by app.js. -->
           <div class="posts-grid" id="posts-grid" aria-busy="false"></div>
 
-          <!-- Load additional articles without reloading the page. -->
-          <button
-            type="button"
-            id="load-more"
-            class="button button-dark"
+          <!-- Navigate between pages of articles. -->
+          <nav
+            class="pagination"
+            id="pagination"
+            aria-label="Story pages"
             hidden
           >
-            Load more stories
-          </button>
+            <button type="button" id="prev-page" class="button button-outline">
+              ← Previous
+            </button>
+
+            <span id="page-info" role="status">Page 1</span>
+
+            <button type="button" id="next-page" class="button button-dark">
+              Next →
+            </button>
+          </nav>
 
           <!-- Displayed when search or filters return no results -->
           <div class="empty-state" id="empty-state" hidden>
