@@ -1,5 +1,11 @@
 /* ========== THE JOURNAL — API SERVICE ========== */
 
+import {
+  validatePostId,
+  validateComment,
+  validatePostUpdate,
+} from "./validators.js";
+
 /* Base address of the DummyJSON REST API. */
 const API_BASE_URL = "https://dummyjson.com";
 
@@ -61,17 +67,6 @@ async function apiRequest(endpoint, options = {}) {
     throw new Error("The API returned invalid JSON.", {
       cause: error,
     });
-  }
-}
-
-/**
- * Validate that a post ID is a positive integer.
- *
- * @param {number} postId - The post ID to validate.
- */
-function validatePostId(postId) {
-  if (!Number.isSafeInteger(postId) || postId <= 0) {
-    throw new TypeError("Post ID must be a positive integer.");
   }
 }
 
@@ -159,5 +154,32 @@ export async function createComment(postId, body) {
   return apiRequest("/comments/add", {
     method: "POST",
     body: JSON.stringify(comment),
+  });
+}
+
+/**
+ * Update an existing blog post using PATCH or PUT.
+ *
+ * DummyJSON simulates updates without permanently saving them.
+ *
+ * @param {number} postId - The ID of the post to update.
+ * @param {Object} payload - The article fields to update.
+ * @param {"PATCH"|"PUT"} [method="PATCH"] - HTTP method.
+ * @returns {Promise<Object>} The updated post object.
+ */
+export async function updatePost(postId, payload, method = "PATCH") {
+  // Validate the post ID and update data.
+  validatePostId(postId);
+  validatePostUpdate(payload);
+
+  // Allow only supported update methods.
+  if (method !== "PATCH" && method !== "PUT") {
+    throw new TypeError("Update method must be PATCH or PUT.");
+  }
+
+  // Send the update request.
+  return apiRequest(`/posts/${postId}`, {
+    method,
+    body: JSON.stringify(payload),
   });
 }

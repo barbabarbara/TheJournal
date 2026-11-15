@@ -295,7 +295,88 @@
     throw new Error("Expected post ID validation to fail.");
   });
 
-  /* ========== 09. TESTS FINISHED ========== */
+  /* ========== 09. TESTS UPDATE POST ========== */
+
+  (async () => {
+    const { updatePost } = await import("./assets/js/api.js");
+
+    // Test a valid PATCH request.
+    const post = await updatePost(5, {
+      title: "Updated article title",
+    });
+
+    console.log("Updated title:", post.title);
+
+    // Test invalid update data.
+    try {
+      await updatePost(5, { title: "" });
+    } catch (error) {
+      console.log("Validation error:", error.message);
+    }
+  })();
+
+  /* ========== 10. TESTS VALIDATORS ========== */
+
+  (async () => {
+    const { validatePostId, validateComment, validatePostUpdate } =
+      await import("./assets/js/validators.js");
+
+    // Test valid input.
+    validatePostId(5);
+    validateComment("Interesting article!");
+    validatePostUpdate({ title: "Updated title" });
+
+    console.log("Valid inputs passed.");
+
+    // Test invalid input.
+    try {
+      validatePostId(-5);
+    } catch (error) {
+      console.log("Invalid ID:", error.message);
+    }
+
+    try {
+      validateComment("   ");
+    } catch (error) {
+      console.log("Invalid comment:", error.message);
+    }
+
+    try {
+      validatePostUpdate({ title: "" });
+    } catch (error) {
+      console.log("Invalid update:", error.message);
+    }
+  })();
+
+  /* ========== 11. TESTS UPDATE POST ========== */
+
+  (async () => {
+    const { updatePost } = await import("./assets/js/api.js");
+
+    // Test PATCH — update only the title.
+    const patchedPost = await updatePost(5, {
+      title: "Updated with PATCH",
+    });
+
+    console.log("PATCH title:", patchedPost.title);
+
+    // Test PUT — update multiple fields.
+    const updatedPost = await updatePost(
+      5,
+      {
+        title: "Updated with PUT",
+        body: "This article has been revised.",
+        tags: ["javascript", "technology"],
+      },
+      "PUT",
+    );
+
+    console.log("PUT title:", updatedPost.title);
+    console.log("PUT body:", updatedPost.body);
+    console.log("PUT tags:", updatedPost.tags);
+  })();
+
+  /* ========== 11. TESTS FINISHED ========== */
 
   console.log("All manual API tests have finished.");
 })();
