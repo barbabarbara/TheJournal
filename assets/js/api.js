@@ -4,6 +4,7 @@ import {
   validatePostId,
   validateComment,
   validatePostUpdate,
+  normalizePostUpdate,
 } from "./validators.js";
 
 /* Base address of the DummyJSON REST API. */
@@ -136,11 +137,8 @@ export async function fetchCommentsByPostId(postId) {
 export async function createComment(postId, body) {
   // Validate the post ID before sending the request.
   validatePostId(postId);
-
-  // Verify that the comment contains meaningful text.
-  if (typeof body !== "string" || !body.trim()) {
-    throw new TypeError("Comment text cannot be empty.");
-  }
+  // Validate the comment text.
+  validateComment(body);
 
   // Prepare the comment data required by DummyJSON.
   const comment = {
@@ -160,15 +158,13 @@ export async function createComment(postId, body) {
 /**
  * Update an existing blog post using PATCH or PUT.
  *
- * DummyJSON simulates updates without permanently saving them.
- *
  * @param {number} postId - The ID of the post to update.
  * @param {Object} payload - The article fields to update.
  * @param {"PATCH"|"PUT"} [method="PATCH"] - HTTP method.
  * @returns {Promise<Object>} The updated post object.
  */
 export async function updatePost(postId, payload, method = "PATCH") {
-  // Validate the post ID and update data.
+  // Validate the post ID and article data.
   validatePostId(postId);
   validatePostUpdate(payload);
 
@@ -177,9 +173,12 @@ export async function updatePost(postId, payload, method = "PATCH") {
     throw new TypeError("Update method must be PATCH or PUT.");
   }
 
-  // Send the update request.
+  // Create a cleaned copy of the update data.
+  const normalizedPayload = normalizePostUpdate(payload);
+
+  // Submit the normalized data to DummyJSON.
   return apiRequest(`/posts/${postId}`, {
     method,
-    body: JSON.stringify(payload),
+    body: JSON.stringify(normalizedPayload),
   });
 }
