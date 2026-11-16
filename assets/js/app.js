@@ -39,7 +39,7 @@ const retryButton = document.querySelector("#retry-feed");
 // Displays a message if no articles are available.
 const emptyState = document.querySelector("#empty-state");
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 9;
 const MAX_EXCERPT_LENGTH = 175;
 
 let allPosts = [];
@@ -149,7 +149,6 @@ function createPostCard(post) {
   return article;
 }
 
-
 /* ========== 03. RENDER ARTICLES ========== */
 
 /**
@@ -165,10 +164,7 @@ function renderPosts() {
   const startIndex = (currentPage - 1) * PAGE_SIZE;
 
   // Select only the articles for the current page.
-  const visiblePosts = allPosts.slice(
-    startIndex,
-    startIndex + PAGE_SIZE,
-  );
+  const visiblePosts = allPosts.slice(startIndex, startIndex + PAGE_SIZE);
 
   // Create a temporary container for the article cards.
   const fragment = document.createDocumentFragment();
@@ -190,8 +186,7 @@ function renderPosts() {
     const first = startIndex + 1;
     const last = startIndex + visiblePosts.length;
 
-    resultCount.textContent =
-      `Showing ${first}–${last} of ${allPosts.length} stories.`;
+    resultCount.textContent = `Showing ${first}–${last} of ${allPosts.length} stories.`;
   }
 
   // Update the pagination information.
