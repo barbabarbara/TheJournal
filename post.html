@@ -20,7 +20,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./assets/css/styles.css" />
-    <!-- M4–M9 will connect post.js once the API functionality is implemented. -->
+    <!-- M6: load the article and matching comments. -->
+    <script type="module" src="./assets/js/post.js"></script>
   </head>
 
   <body>
@@ -59,37 +60,28 @@
         <!-- Filled by JavaScript if a request fails (M6). -->
         <div class="notice notice-error" id="post-error" role="alert" hidden>
           <span id="post-error-message"></span>
-          <button class="notice-action" id="retry-post" type="button" disabled>
+          <button class="notice-action" id="retry-post" type="button">
             Try again
           </button>
         </div>
 
-        <!-- M3 design preview: replaced with real API post in M6. -->
+        <!-- The article data is inserted safely by post.js. -->
         <article
           class="article-content"
           id="post-article"
           aria-labelledby="post-title"
-          aria-busy="false"
+          aria-busy="true"
         >
           <header class="article-header">
-            <p class="eyebrow">STORY / DESIGN PREVIEW</p>
-            <h1 class="article-title" id="post-title">
-              A closer look at every story.
-            </h1>
-
-            <!-- Future author, views and likes metadata. -->
-            <div class="article-meta">
-              <span class="author-badge" aria-hidden="true">J</span>
-              <span class="meta-author">The Journal</span>
-              <span class="meta-dot" aria-hidden="true">·</span>
-              <span>Article details will come from DummyJSON</span>
-            </div>
+            <p class="eyebrow" id="post-number">LOADING STORY</p>
+            <h1 class="article-title" id="post-title">Loading story…</h1>
+            <div class="article-meta" id="post-meta" hidden></div>
             <p class="preview-note" id="post-status" role="status">
-              Design preview only — real article content arrives in M6.
+              Retrieving article details…
             </p>
           </header>
 
-          <!-- Decorative illustration, built entirely with CSS. -->
+          <!-- Keep the CSS illustration from your M3 design. -->
           <div class="article-visual" aria-hidden="true">
             <span class="article-visual-asterisk">✳</span>
             <span class="article-visual-caption"
@@ -97,25 +89,18 @@
             >
           </div>
 
-          <!-- Reading layout. JavaScript will insert the article body later. -->
+          <!-- Full article text, never a truncated preview. -->
           <div class="article-body-wrap">
-            <div id="post-content">
-              <p class="article-body">
-                This is a design preview of the article reading experience. The
-                selected story's body text will appear here when I connect to
-                the DummyJSON API.
-              </p>
-              <p class="article-body">
-                For now, the layout lets us check typography, line length,
-                spacing and the visual balance of the article page.
-              </p>
-            </div>
+            <div id="post-content"></div>
           </div>
 
-          <footer class="article-footer">
-            <div class="tag-list" aria-label="Article tags">
-              <span class="tag">Design preview</span>
-            </div>
+          <footer class="article-footer" id="post-footer" hidden>
+            <div
+              class="tag-list"
+              id="post-tags"
+              aria-label="Article tags"
+            ></div>
+            <!-- Editing and deleting are planned for later milestones. -->
             <div class="article-actions">
               <button
                 class="button button-dark"
@@ -223,6 +208,7 @@
           class="comments-section"
           id="comments"
           aria-labelledby="comments-heading"
+          hidden
         >
           <div class="comments-top">
             <div>
@@ -235,7 +221,7 @@
             <p>Share your thoughts on this story.</p>
           </div>
 
-          <!-- Users can inspect the field, but submission starts in M7. -->
+          <!-- The comment form stays disabled until M7. -->
           <div class="comment-compose">
             <span class="comment-compose-icon" aria-hidden="true">J</span>
             <form id="comment-form">
@@ -243,6 +229,7 @@
               <textarea
                 id="comment-body"
                 name="body"
+                disabled
                 rows="4"
                 minlength="2"
                 maxlength="1000"
@@ -250,9 +237,7 @@
                 required
               ></textarea>
               <div class="compose-bottom">
-                <p>
-                  Comment submission will be available after API integration.
-                </p>
+                <p>Comment submission will be available in M7.</p>
                 <button
                   class="button button-dark"
                   id="submit-comment"
@@ -278,36 +263,14 @@
             hidden
           >
             <span id="comments-error-message"></span>
-            <button
-              class="notice-action"
-              id="retry-comments"
-              type="button"
-              disabled
-            >
+            <button class="notice-action" id="retry-comments" type="button">
               Try again
             </button>
           </div>
 
-          <!-- One clearly labelled design sample for styling in M3. -->
-          <div class="comments-list" id="comments-list" aria-busy="false">
-            <p class="loading-copy" id="comments-status" role="status">
-              Comment data will be loaded from DummyJSON in M6.
-            </p>
-            <article class="comment">
-              <span class="comment-avatar" aria-hidden="true">J</span>
-              <div class="comment-content">
-                <div class="comment-top">
-                  <h3 class="comment-author">Example comment</h3>
-                  <span class="comment-local">DESIGN PREVIEW</span>
-                </div>
-                <p class="comment-text">
-                  This example illustrates how a real comment will look.
-                </p>
-                <span class="comment-likes"
-                  >Likes available after API integration</span
-                >
-              </div>
-            </article>
+          <!-- Comments are loaded separately after the article succeeds. -->
+          <div class="comments-list" id="comments-list" aria-busy="true">
+            <p class="loading-copy" role="status">Loading comments…</p>
           </div>
         </section>
       </div>
