@@ -5,6 +5,14 @@
   "type": "module",
   "description": "Responsive JavaScript blog with DummyJSON REST API",
   "scripts": {
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "images:preview": "node scripts/generate-images.mjs --dry-run --ids=1",
+    "images:one": "node scripts/generate-images.mjs --ids=1",
+    "images:five": "node scripts/generate-images.mjs --limit=5",
+    "images:all": "node scripts/generate-images.mjs",
+    "images:convert": "node scripts/convert-existing-images.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.35.5"
   }
 }

@@ -10,12 +10,14 @@ app.js has four main responsibilities:
 
 // Import the existing API function.
 import { fetchPosts } from "./api.js";
+import { findArticleImage } from "./article-images.js";
 import { truncateText } from "./utils.js";
 
 /* ========== 01. DOM ELEMENTS ========== */
 
 // Find the container where article cards will appear.
 const postsGrid = document.querySelector("#posts-grid");
+const featuredPost = document.querySelector("#featured-post");
 
 // Find the element displaying the number of articles.
 const resultCount = document.querySelector("#result-count");
@@ -24,6 +26,9 @@ const pagination = document.querySelector("#pagination");
 const prevPageButton = document.querySelector("#prev-page");
 const nextPageButton = document.querySelector("#next-page");
 const pageInfo = document.querySelector("#page-info");
+const pageNumbers = document.querySelector("#page-numbers");
+const pageJumpForm = document.querySelector("#page-jump-form");
+const pageJumpInput = document.querySelector("#page-jump-input");
 
 /* ----- Loading, error and empty-state elements ----- */
 
@@ -44,6 +49,111 @@ const MAX_EXCERPT_LENGTH = 175;
 
 let allPosts = [];
 let currentPage = 1;
+
+/* ========== IMAGES ONLY — NO CHANGE TO SITE DESIGN ========== */
+
+/**
+ * Add a picture to a story card only if its generated local file exists.
+ * Otherwise, the text-only card keeps the original appearance.
+ */
+function createPostPicture(post) {
+  const link = document.createElement("a");
+  link.className = "card-picture-link";
+  link.href = `./post.html?id=${post.id}`;
+  link.setAttribute("aria-label", `Read ${post.title}`);
+  link.hidden = true;
+
+  const image = document.createElement("img");
+  image.className = "card-picture";
+  image.alt = `Illustration for ${post.title}`;
+  image.loading = "eager";
+  image.decoding = "async";
+  image.addEventListener("load", () => {
+    link.append(image);
+    link.hidden = false;
+  });
+  image.addEventListener("error", () => {
+    link.hidden = true;
+  });
+
+  void findArticleImage(post)
+    .then((picture) => {
+      image.alt = picture.alt;
+      image.src = picture.src;
+    })
+    .catch(() => {
+      link.hidden = true;
+    });
+
+  return link;
+}
+
+/**
+ * Put a generated picture in the EXISTING featured artwork area.
+ * The original decorative artwork remains whenever no picture exists.
+ */
+function showFeaturedPicture(post) {
+  if (!featuredPost || !post) return;
+  const visual = featuredPost.querySelector(".featured-visual");
+  if (!visual) return;
+
+  visual.querySelector(".featured-picture")?.remove();
+  visual.classList.remove("has-generated-picture");
+
+  const picture = document.createElement("img");
+  picture.className = "featured-picture";
+  picture.alt = "";
+  picture.loading = "eager";
+  picture.decoding = "async";
+  picture.addEventListener("load", () => {
+    visual.classList.add("has-generated-picture");
+  });
+  picture.addEventListener("error", () => {
+    picture.remove();
+    visual.classList.remove("has-generated-picture");
+  });
+  visual.append(picture);
+
+  void findArticleImage(post)
+    .then(({ src }) => {
+      picture.src = src;
+    })
+    .catch(() => picture.remove());
+}
+
+/** Fill the existing featured preview so its picture matches the story. */
+function renderFeaturedStory(posts) {
+  if (!featuredPost || posts.length === 0) return;
+  const featured = [...posts].sort(
+    (a, b) => (b.views ?? 0) - (a.views ?? 0),
+  )[0];
+  const content = featuredPost.querySelector(".featured-content");
+  if (!content) return;
+
+  content.querySelector(".featured-kicker").textContent =
+    "EDITOR’S PICK · FEATURED STORY";
+  const tags = content.querySelector(".tag-list");
+  const tagElements = (featured.tags ?? []).slice(0, 3).map((tag) => {
+    const element = document.createElement("span");
+    element.className = "tag";
+    element.textContent = tag;
+    return element;
+  });
+  tags.replaceChildren(...tagElements);
+
+  const title = content.querySelector(".featured-title");
+  const link = document.createElement("a");
+  link.href = `./post.html?id=${featured.id}`;
+  link.textContent = featured.title;
+  title.replaceChildren(link);
+  content.querySelector(".featured-description").textContent = truncateText(
+    featured.body,
+    240,
+  );
+  content.querySelector(".featured-meta").textContent =
+    `${featured.views ?? 0} views · ${featured.reactions?.likes ?? 0} likes`;
+  showFeaturedPicture(featured);
+}
 
 /* ========== 02. CREATE ARTICLE CARD ========== */
 
@@ -144,9 +254,85 @@ function createPostCard(post) {
 
   /* ----- Assemble the complete card ----- */
 
-  article.append(cardTop, cardMain, cardMeta, cardActions);
+  article.append(
+    cardTop,
+    createPostPicture(post),
+    cardMain,
+    cardMeta,
+    cardActions,
+  );
 
   return article;
+}
+
+// Navigate to a specific page.
+function goToPage(page) {
+  const totalPages = Math.ceil(allPosts.length / PAGE_SIZE);
+
+  if (!Number.isInteger(page) || page < 1 || page > totalPages) {
+    return;
+  }
+
+  currentPage = page;
+  renderPosts();
+
+  resultCount.scrollIntoView({
+    behavior: "smooth",
+  });
+}
+
+// Generate numbered pagination with ellipses.
+function renderPageNumbers(totalPages) {
+  const pages = new Set([
+    1,
+    totalPages,
+    currentPage - 1,
+    currentPage,
+    currentPage + 1,
+  ]);
+
+  const sortedPages = [...pages]
+    .filter((page) => page >= 1 && page <= totalPages)
+    .sort((a, b) => a - b);
+
+  const fragment = document.createDocumentFragment();
+
+  function addButton(page) {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.className = "page-number";
+    button.textContent = String(page);
+    button.setAttribute("aria-label", `Go to page ${page}`);
+
+    if (page === currentPage) {
+      button.classList.add("active");
+      button.setAttribute("aria-current", "page");
+    }
+
+    button.addEventListener("click", () => goToPage(page));
+
+    fragment.append(button);
+  }
+
+  let previous = 0;
+
+  for (const page of sortedPages) {
+    if (page - previous === 2) {
+      addButton(previous + 1);
+    } else if (page - previous > 2) {
+      const dots = document.createElement("span");
+      dots.className = "page-ellipsis";
+      dots.textContent = "…";
+      dots.setAttribute("aria-hidden", "true");
+      fragment.append(dots);
+    }
+
+    addButton(page);
+    previous = page;
+  }
+
+  pageNumbers.replaceChildren(fragment);
 }
 
 /* ========== 03. RENDER ARTICLES ========== */
@@ -191,6 +377,10 @@ function renderPosts() {
 
   // Update the pagination information.
   pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+  renderPageNumbers(totalPages);
+
+  pageJumpInput.max = String(totalPages);
+  pageJumpInput.value = String(currentPage);
 
   // Disable navigation buttons when appropriate.
   prevPageButton.disabled = currentPage === 1;
@@ -235,7 +425,8 @@ async function loadPosts() {
 
     currentPage = 1;
 
-    // Render the posts or the empty state.
+    // Update the original featured preview and render article cards.
+    renderFeaturedStory(allPosts);
     renderPosts();
   } catch (error) {
     /* ----- Failed request ----- */
@@ -290,6 +481,20 @@ nextPageButton.addEventListener("click", () => {
 
 // Retry loading articles when the user clicks "Try again".
 retryButton.addEventListener("click", loadPosts);
+
+// Jump to a page entered by the user.
+pageJumpForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const page = Number(pageJumpInput.value);
+
+  if (!pageJumpInput.checkValidity()) {
+    pageJumpInput.reportValidity();
+    return;
+  }
+
+  goToPage(page);
+});
 
 /* ========== 06. INITIALIZATION ========== */
 

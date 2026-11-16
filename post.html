@@ -88,6 +88,7 @@
               >STORIES &amp; PERSPECTIVES</span
             >
           </div>
+          <p class="article-image-credit" id="post-image-credit" hidden></p>
 
           <!-- Full article text, never a truncated preview. -->
           <div class="article-body-wrap">
@@ -95,11 +96,29 @@
           </div>
 
           <footer class="article-footer" id="post-footer" hidden>
-            <div
-              class="tag-list"
-              id="post-tags"
-              aria-label="Article tags"
-            ></div>
+            <!-- Keep original API tags separate from suggested topics. -->
+            <div class="article-taxonomy">
+              <div class="taxonomy-group">
+                <p class="taxonomy-label" id="post-tags-heading">
+                  Article tags
+                </p>
+                <div
+                  class="tag-list"
+                  id="post-tags"
+                  aria-labelledby="post-tags-heading"
+                ></div>
+              </div>
+              <div class="taxonomy-group" id="related-topics-section" hidden>
+                <p class="taxonomy-label" id="related-topics-heading">
+                  Related topics <span>(suggested from the story)</span>
+                </p>
+                <div
+                  class="tag-list topic-list"
+                  id="related-topics"
+                  aria-labelledby="related-topics-heading"
+                ></div>
+              </div>
+            </div>
             <!-- Editing and deleting are planned for later milestones. -->
             <div class="article-actions">
               <button

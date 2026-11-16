@@ -15,3 +15,8 @@ PROJECT_PLAN.md
 
 # Fallow configuration
 .fallow/
+
+# Keep private Cloudflare credentials out of GitHub
+.env
+.env.*
+!.env.example

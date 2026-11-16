@@ -637,6 +637,39 @@ p {
   color: var(--ink-soft);
 }
 
+/* ========== SEARCHED ARTICLE PHOTOGRAPHS ========== */
+
+.article-visual-image {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+}
+
+/* Show a photo only after its file has finished loading. */
+.article-visual.has-image .article-visual-image {
+  opacity: 1;
+}
+
+/* A clear source credit just below the image. */
+.article-image-credit {
+  margin: 9px 0 0;
+  color: #788594;
+  font-size: 11px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+.article-image-credit a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
 /* ========== 07. ABOUT THE JOURNAL (M3 STEP 4.1) ========== */
 
 /* Background, border, and vertical spacing. */
@@ -1039,6 +1072,90 @@ p {
   font-weight: 700;
 }
 
+/* ========== COMBINED PAGINATION ========== */
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.page-number {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 8px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: #253041;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.page-number:hover {
+  background-color: #eef1f5;
+}
+
+.page-number.active {
+  background-color: #17191d;
+  color: #fff;
+}
+
+.page-ellipsis {
+  padding: 0 5px;
+  color: #8793a1;
+}
+
+.page-jump {
+  display: flex;
+  flex-basis: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.page-jump label {
+  color: #697480;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.page-jump input {
+  width: 70px;
+  height: 42px;
+  padding: 8px;
+  border: 1px solid #e6ebf0;
+  border-radius: 10px;
+  background: #fff;
+  color: #253041;
+  font: inherit;
+  text-align: center;
+}
+
+.pagination-status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Responsive pagination */
+@media (max-width: 600px) {
+  .page-numbers {
+    order: 3;
+    width: 100%;
+  }
+
+  .page-jump {
+    order: 4;
+  }
+}
+
 /* ========== 11. POST DETAILS PAGE ========== */
 
 /* Limit the width so long articles remain comfortable to read. */
@@ -1051,10 +1168,19 @@ p {
   display: inline-flex;
   align-items: center;
   gap: 12px;
-  min-height: 44px;
-  color: #788594;
-  font-size: 12px;
-  font-weight: 800;
+  padding: 12px 18px;
+  border: 1px solid #e6ebf0;
+  border-radius: 30px;
+  background-color: #fff;
+  color: #253041;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.back-link:hover {
+  background-color: #f3f5f7;
 }
 
 .back-link:hover {
@@ -1125,7 +1251,8 @@ p {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 270px;
+  width: 100%;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   border-radius: 14px;
   background-color: #dce4eb;
@@ -1888,4 +2015,40 @@ p {
   .post-card:hover {
     transform: none;
   }
+}
+
+/* ========== LOCALLY GENERATED AI PICTURES (IMAGE STYLES ONLY) ========== */
+/* This adds pictures inside existing cards, without changing the page grid. */
+.card-picture-link {
+  display: block;
+  margin: -14px 0 20px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.card-picture-link[hidden] {
+  display: none;
+}
+
+.card-picture {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #e6ebf0;
+}
+
+/* Reuse the original featured visual frame and its dimensions. */
+.featured-picture {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+
+.featured-visual.has-generated-picture .featured-picture {
+  opacity: 1;
 }

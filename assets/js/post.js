@@ -1,4 +1,4 @@
-/* ========== THE JOURNAL — INDIVIDUAL ARTICLE ========== */
+/* ========== THE JOURNAL — INDIVIDUAL ARTICLE (M6) ========== */
 
 /*
 post.js has four responsibilities:
@@ -12,16 +12,22 @@ Editing, deletion, and posting comments belong to later milestones.
 
 // Reuse the tested API service rather than calling fetch() here.
 import { fetchCommentsByPostId, fetchPostById } from "./api.js";
+import { DEFAULT_ARTICLE_IMAGE, findArticleImage } from "./article-images.js";
+import { getRelatedTopics } from "./article-topics.js";
 
 /* ========== 01. DOM ELEMENTS ========== */
 
 const article = document.querySelector("#post-article");
+const articleVisual = document.querySelector(".article-visual");
+const imageCredit = document.querySelector("#post-image-credit");
 const postNumber = document.querySelector("#post-number");
 const postTitle = document.querySelector("#post-title");
 const postMeta = document.querySelector("#post-meta");
 const postStatus = document.querySelector("#post-status");
 const postContent = document.querySelector("#post-content");
 const postTags = document.querySelector("#post-tags");
+const relatedTopics = document.querySelector("#related-topics");
+const relatedTopicsSection = document.querySelector("#related-topics-section");
 const postFooter = document.querySelector("#post-footer");
 
 const postError = document.querySelector("#post-error");
@@ -95,7 +101,87 @@ function showPostError(message, canRetry = false) {
   document.title = "Story unavailable | The Journal";
 }
 
-/* ========== 04. RENDER THE FULL ARTICLE ========== */
+/* ========== 04. ARTICLE PHOTOGRAPH ========== */
+
+// Prevent an old image request from updating a newly rendered story.
+let imageRequestId = 0;
+
+/** Display the selected photograph’s source, without inserting HTML. */
+function showImageCredit(photo) {
+  if (!photo.source) {
+    imageCredit.replaceChildren();
+    imageCredit.hidden = true;
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = photo.source;
+  link.textContent = photo.sourceLabel ?? "View photograph";
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+
+  imageCredit.replaceChildren(
+    document.createTextNode(
+      `Illustrative photo: ${photo.creator} · ${photo.license} · `,
+    ),
+    link,
+  );
+  imageCredit.hidden = false;
+}
+
+/**
+ * Display a subject-matched photograph in the existing article window.
+ * When an external image fails, display the project's local image instead.
+ * Image loading must never interrupt article or comment rendering.
+ */
+async function renderArticlePhoto(post) {
+  const requestId = ++imageRequestId;
+
+  articleVisual.querySelector(".article-visual-image")?.remove();
+  articleVisual.classList.remove("has-image");
+  imageCredit.replaceChildren();
+  imageCredit.hidden = true;
+
+  try {
+    const photo = await findArticleImage(post);
+    if (requestId !== imageRequestId) return;
+
+    const image = document.createElement("img");
+    image.className = "article-visual-image";
+    image.alt = ""; // Decorative illustration; story text provides context.
+    image.loading = "eager"; // The photo is near the top of the page.
+    image.decoding = "async";
+
+    let usingLocalFallback = photo.src === DEFAULT_ARTICLE_IMAGE;
+
+    image.addEventListener("load", () => {
+      if (requestId !== imageRequestId) return;
+      articleVisual.classList.add("has-image");
+      showImageCredit(usingLocalFallback ? { source: null } : photo);
+    });
+
+    image.addEventListener("error", () => {
+      if (requestId !== imageRequestId) return;
+
+      if (!usingLocalFallback) {
+        // A broken photo URL must not leave the grey illustration empty.
+        usingLocalFallback = true;
+        image.src = DEFAULT_ARTICLE_IMAGE;
+      } else {
+        // Only needed if the local asset itself has been removed.
+        image.remove();
+        articleVisual.classList.remove("has-image");
+      }
+    });
+
+    articleVisual.append(image);
+    image.src = photo.src;
+  } catch (error) {
+    console.info("Illustrative photo unavailable:", error.message);
+  }
+}
+
+/* ========== 05. RENDER THE FULL ARTICLE ========== */
 
 /**
  * Replace the design placeholders with the selected API article.
@@ -105,6 +191,9 @@ function showPostError(message, canRetry = false) {
 function renderArticle(post) {
   postNumber.textContent = `STORY / ${String(post.id).padStart(3, "0")}`;
   postTitle.textContent = post.title;
+
+  // Search for a relevant photograph; continue rendering immediately.
+  void renderArticlePhoto(post);
 
   // Display a real author ID; DummyJSON posts don't include author names.
   const authorId = post.userId ?? "unknown";
@@ -147,6 +236,16 @@ function renderArticle(post) {
     tagFragment.append(createElement("span", "tag", tag));
   }
   postTags.replaceChildren(tagFragment);
+
+  // Add extra, clearly identified topics inferred from the article.
+  // Do not present these as original DummyJSON tags.
+  const topics = getRelatedTopics(post);
+  const topicFragment = document.createDocumentFragment();
+  for (const topic of topics) {
+    topicFragment.append(createElement("span", "tag topic-tag", topic));
+  }
+  relatedTopics.replaceChildren(topicFragment);
+  relatedTopicsSection.hidden = topics.length === 0;
   postFooter.hidden = false;
 
   // Remove the loading message after the article is ready.
@@ -155,7 +254,7 @@ function renderArticle(post) {
   document.title = `${post.title} | The Journal`;
 }
 
-/* ========== 05. RENDER MATCHING COMMENTS ========== */
+/* ========== 06. RENDER MATCHING COMMENTS ========== */
 
 /**
  * Create one safe comment card, matching the existing CSS design.
@@ -213,7 +312,7 @@ function renderComments(comments) {
   commentsList.setAttribute("aria-busy", "false");
 }
 
-/* ========== 06. LOAD COMMENTS ========== */
+/* ========== 07. LOAD COMMENTS ========== */
 
 /**
  * Load comments separately; a comment error must not hide the article.
@@ -252,7 +351,7 @@ async function loadComments() {
   }
 }
 
-/* ========== 07. LOAD ARTICLE ========== */
+/* ========== 08. LOAD ARTICLE ========== */
 
 /**
  * Fetch the article. Comments load only if it succeeds.
@@ -312,7 +411,7 @@ async function loadPost() {
   }
 }
 
-/* ========== 08. EVENTS & INITIALIZATION ========== */
+/* ========== 09. EVENTS & INITIALIZATION ========== */
 
 retryPostButton.addEventListener("click", loadPost);
 retryCommentsButton.addEventListener("click", loadComments);
